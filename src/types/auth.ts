@@ -6,6 +6,5 @@ export interface AuthRequest {
 }
 
 export interface AuthResponse {
-  token: string; // JWT
   role: Role;
 }

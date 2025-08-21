@@ -5,6 +5,7 @@ import type { Student } from '../types/student';
 // corresponda ao que esperamos.
 export async function getAllStudents(): Promise<Student[]> {
   const { data } = await api.get<Student[]>('/students');
+    console.log('Dados retornados pelo serviço:', data);
   return data;
 }
 
