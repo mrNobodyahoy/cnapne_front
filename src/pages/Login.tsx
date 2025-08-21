@@ -1,12 +1,13 @@
-// src/pages/Login.tsx
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
-import AuthCard from "../components/AuthCard";
+import AuthCard from "../components/auth/AuthCard";
 import { loginRequest, me } from "../services/authService";
 import { useAuth } from "../store/auth";
+import { useNavigate } from "react-router-dom";
+import logoIfpr from '../assets/if-vertical.png';
 
 const schema = z.object({
   email: z.string().email("Informe um e-mail válido."),
@@ -15,18 +16,23 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function Login() {
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
   const { setSession } = useAuth();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
     try {
-      await loginRequest(data);           // cookie é setado aqui
-      const meResp = await me();          // confirma sessão e pega email/role
+      await loginRequest(data);
+      const meResp = await me();
       setSession(meResp);
-      window.location.href = "/";         // dashboard
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      navigate("/");
     } catch (err: any) {
       const status = err?.response?.status;
       const message =
@@ -38,14 +44,39 @@ export default function Login() {
   };
 
   return (
-    <div className="grid min-h-screen place-items-center bg-slate-50 p-4">
-      <AuthCard title="Acessar o sistema">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input id="email" type="email" placeholder="seu.email@ifpr.edu.br" label="E-mail" autoComplete="username"
-                 {...register("email")} error={errors.email?.message} />
-          <Input id="password" type="password" placeholder="••••••••" label="Senha" autoComplete="current-password"
-                 {...register("password")} error={errors.password?.message} />
-          <Button type="submit" loading={isSubmitting}>Entrar</Button>
+    <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 p-4">
+      
+      {/* 1. ESTE É O ÚNICO LOGO NA PÁGINA */}
+      <div className="absolute top-8 left-8">
+        <img src={logoIfpr} alt="Logo do IFPR" className="h-20 w-auto" />
+      </div>
+
+      <AuthCard>
+        <h1 className="mb-8 text-center text-3xl font-bold text-ifpr-black">
+          Efetuar Login
+        </h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <Input
+            id="email"
+            type="email"
+            placeholder="seu.email@ifpr.edu.br"
+            label="E-mail"
+            autoComplete="username"
+            {...register("email")}
+            error={errors.email?.message}
+          />
+          <Input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            label="Senha"
+            autoComplete="current-password"
+            {...register("password")}
+            error={errors.password?.message}
+          />
+          <Button type="submit" loading={isSubmitting}>
+            Entrar
+          </Button>
         </form>
       </AuthCard>
     </div>
