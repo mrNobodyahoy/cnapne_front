@@ -1,13 +1,13 @@
-// src/components/student/StudentFormFields.tsx
+// src/components/student/StudentEditFormFields.tsx
 import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
 import Input from '../ui/Input';
-import type { CreateFormData } from './StudentForm';
+import type { UpdateFormData } from './StudentEditForm';
 import { Controller } from 'react-hook-form';
 
 type Props = {
-  register: UseFormRegister<CreateFormData>;
-  errors: FieldErrors<CreateFormData>;
-  control: Control<CreateFormData>;
+  register: UseFormRegister<UpdateFormData>;
+  errors: FieldErrors<UpdateFormData>;
+  control: Control<UpdateFormData>;
 };
 
 // Máscara de telefone
@@ -20,7 +20,7 @@ const formatPhone = (value: string) => {
   return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
 };
 
-export default function StudentFormFields({ register, errors, control }: Props) {
+export default function StudentEditFormFields({ register, errors, control }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
       <Input
@@ -39,15 +39,6 @@ export default function StudentFormFields({ register, errors, control }: Props) 
         id="email"
         {...register("email")}
         error={errors.email?.message}
-      />
-
-      <Input
-        label="Senha"
-        type="password"
-        placeholder="Digite uma senha"
-        id="password"
-        {...register("password")}
-        error={errors.password?.message}
       />
 
       <Input

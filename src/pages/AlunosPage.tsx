@@ -1,21 +1,59 @@
-import { useQuery } from '@tanstack/react-query';
-import { getAllStudents } from '../services/studentService';
-import { AlertTriangle, LoaderCircle, Plus } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAllStudents, deleteStudent } from '../services/studentService';
+import { AlertTriangle, LoaderCircle, Plus, Edit, Trash, FileArchive } from 'lucide-react';
 import type { Student } from '../types/student';
 import StudentForm from '../components/student/StudentForm';
+import StudentEditForm from '../components/student/StudentEditForm';
 import { useState } from 'react';
 import Button from '../components/ui/Button';
+import StudentDocumentsModal from '../components/document/StudentDocumentsModal';
 
 export default function AlunosPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  const [isDocumentsModalOpen, setIsDocumentsModalOpen] = useState(false);
+  const [studentForDocs, setStudentForDocs] = useState<Student | null>(null);
+
+  const queryClient = useQueryClient();
 
   const { data: students, isLoading, isError, error } = useQuery<Student[], Error>({
     queryKey: ['students'],
     queryFn: getAllStudents,
   });
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteStudent(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['students'] }),
+    onError: (err: any) => alert('Erro ao deletar estudante: ' + err.message),
+  });
+
+  const openCreateModal = () => setIsCreateModalOpen(true);
+  const closeCreateModal = () => setIsCreateModalOpen(false);
+
+  const openEditModal = (student: Student) => {
+    setStudentToEdit(student);
+    setIsEditModalOpen(true);
+  };
+  const closeEditModal = () => {
+    setStudentToEdit(null);
+    setIsEditModalOpen(false);
+  };
+
+  const openDocumentsModal = (student: Student) => {
+    setStudentForDocs(student);
+    setIsDocumentsModalOpen(true);
+  };
+  const closeDocumentsModal = () => {
+    setStudentForDocs(null);
+    setIsDocumentsModalOpen(false);
+  };
+
+  const handleDeleteStudent = (id: string, name: string) => {
+    if (window.confirm(`Tem certeza que deseja deletar o estudante ${name}?`)) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -40,7 +78,6 @@ export default function AlunosPage() {
   return (
     <div className="w-full">
       <div className="max-w-5xl mx-auto">
-        
         {/* Cabeçalho */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-ifpr-black">Lista de Estudantes</h1>
@@ -48,7 +85,7 @@ export default function AlunosPage() {
         </div>
 
         {/* Tabela de estudantes */}
-        <div className="rounded-lg border bg-white shadow-sm">
+        <div className="rounded-lg border bg-white shadow-sm overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100 border-b-2 border-gray-300">
               <tr>
@@ -70,8 +107,33 @@ export default function AlunosPage() {
                       {student.status}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-center text-sm font-medium">
-                    <a href="#" className="text-ifpr-green hover:underline">Editar</a>
+                  <td className="whitespace-nowrap px-6 py-4 text-center text-sm font-medium flex justify-center gap-2">
+                    <Button 
+                      onClick={() => openDocumentsModal(student)}
+                      className="text-blue-500 hover:text-blue-700 transition"
+                      title="Gerenciar Documentos"
+                    >
+                      <FileArchive className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      onClick={() => openEditModal(student)} 
+                      className="text-ifpr-green hover:text-green-700 transition"
+                      title="Editar Estudante"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteStudent(student.id, student.completeName)}
+                      className="text-red-500 hover:text-red-700 transition"
+                      title="Deletar Estudante"
+                      disabled={deleteMutation.isPending}
+                    >
+                      {deleteMutation.isPending && deleteMutation.variables === student.id ? (
+                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash className="h-4 w-4" />
+                      )}
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -85,9 +147,9 @@ export default function AlunosPage() {
           )}
         </div>
 
-        {/* Botão embaixo no canto direito */}
-        <div className="flex justify-end mt-4">
-          <Button onClick={openModal} className="flex items-center gap-2 px-5 py-2 rounded-lg bg-ifpr-green text-white shadow hover:bg-green-700 transition">
+        {/* Botão de Adicionar */}
+        <div className="flex justify-end mb-6 mt-4">
+          <Button onClick={openCreateModal} className="flex items-center gap-2 px-5 py-2 rounded-lg bg-ifpr-green text-white shadow hover:bg-green-700 transition">
             <Plus className="h-5 w-5" />
             Adicionar Estudante
           </Button>
@@ -95,11 +157,27 @@ export default function AlunosPage() {
       </div>
 
       {/* Modal de criação */}
-      {isModalOpen && (
+      {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="rounded-lg bg-white p-8 shadow-2xl w-full max-w-2xl">
-            <StudentForm onClose={closeModal} />
+            <StudentForm onClose={closeCreateModal} />
           </div>
+        </div>
+      )}
+
+      {/* Modal de edição */}
+      {isEditModalOpen && studentToEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-8 shadow-2xl w-full max-w-2xl">
+            <StudentEditForm onClose={closeEditModal} student={studentToEdit} />
+          </div>
+        </div>
+      )}
+
+      {/* Modal de documentos */}
+      {isDocumentsModalOpen && studentForDocs && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <StudentDocumentsModal student={studentForDocs} onClose={closeDocumentsModal} />
         </div>
       )}
     </div>

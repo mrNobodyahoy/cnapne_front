@@ -5,7 +5,7 @@ export interface Student {
   email: string;
   registration: string;
   team: string;
-  birthDate: string; // A data virá como string no JSON
+  birthDate: string; 
   phone: string;
   gender: string;
   ethnicity: string;
@@ -14,6 +14,17 @@ export interface Student {
 export interface CreateStudentDTO {
     email: string;
     password: string;
+    completeName: string;
+    registration: string;
+    team: string;
+    birthDate: string;
+    phone: string;
+    gender: string;
+    ethnicity: string;
+}
+
+export interface UpdateStudentDTO {
+    email: string;
     completeName: string;
     registration: string;
     team: string;

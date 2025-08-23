@@ -1,17 +1,16 @@
-// src/components/student/StudentForm.tsx
+// src/components/student/StudentEditForm.tsx
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Button from '../ui/Button';
-import { createStudent } from '../../services/studentService';
-import type { CreateStudentDTO } from '../../types/student';
+import { updateStudent } from '../../services/studentService';
+import type { UpdateStudentDTO, Student } from '../../types/student';
 
-import StudentFormFields from './StudentFormFields';
+import StudentEditFormFields from './StudentEditFields';
 
-const createStudentSchema = z.object({
+const updateStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres.'),
   completeName: z.string().min(1, 'Nome completo é obrigatório.'),
   registration: z.string().min(1, 'Matrícula é obrigatória.'),
   team: z.string().min(1, 'Turma é obrigatória.'),
@@ -21,9 +20,15 @@ const createStudentSchema = z.object({
   ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
 });
 
-export type CreateFormData = z.infer<typeof createStudentSchema>;
+export type UpdateFormData = z.infer<typeof updateStudentSchema>;
 
-export default function StudentForm({ onClose }: { onClose: () => void }) {
+export default function StudentEditForm({ 
+  onClose, 
+  student 
+}: { 
+  onClose: () => void; 
+  student: Student 
+}) {
   const queryClient = useQueryClient();
 
   const {
@@ -31,26 +36,29 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-    reset,
-  } = useForm<CreateFormData>({
-    resolver: zodResolver(createStudentSchema),
+  } = useForm<UpdateFormData>({
+    resolver: zodResolver(updateStudentSchema),
     mode: 'onBlur',
+    defaultValues: {
+      ...student,
+      // ajusta data para formato YYYY-MM-DD aceito pelo <input type="date" />
+      birthDate: student.birthDate ? student.birthDate.split('T')[0] : "",
+    },
   });
 
-  const createMutation = useMutation({
-    mutationFn: (newStudent: CreateStudentDTO) => createStudent(newStudent),
+  const updateMutation = useMutation({
+    mutationFn: (updatedStudent: UpdateStudentDTO) => updateStudent(student.id, updatedStudent),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
-      reset();
       onClose();
     },
     onError: (err: any) => {
-      console.error('Erro ao criar estudante:', err);
+      console.error('Erro ao atualizar estudante:', err);
     },
   });
 
-  const onSubmit = (data: CreateFormData) => {
-    createMutation.mutate(data);
+  const onSubmit = (data: UpdateFormData) => {
+    updateMutation.mutate(data);
   };
 
   return (
@@ -59,10 +67,10 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
       className="space-y-6 bg-white p-6 rounded-2xl shadow-md"
     >
       <h2 className="text-2xl font-bold text-ifpr-black">
-        Criar Estudante
+        Editar Estudante
       </h2>
       
-      <StudentFormFields register={register} control={control} errors={errors} />
+      <StudentEditFormFields register={register} control={control} errors={errors} />
 
       <div className="flex justify-end gap-4 pt-4 border-t">
         <Button 
@@ -72,8 +80,8 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
         >
           Cancelar
         </Button>
-        <Button type="submit" loading={isSubmitting || createMutation.isPending}>
-          Salvar
+        <Button type="submit" loading={isSubmitting || updateMutation.isPending}>
+          Salvar Alterações
         </Button>
       </div>
     </form>
