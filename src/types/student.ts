@@ -11,3 +11,14 @@ export interface Student {
   ethnicity: string;
   status: string;
 }
+export interface CreateStudentDTO {
+    email: string;
+    password: string;
+    completeName: string;
+    registration: string;
+    team: string;
+    birthDate: string;
+    phone: string;
+    gender: string;
+    ethnicity: string;
+}
