@@ -53,7 +53,7 @@ export default function Login() {
 
       <AuthCard>
         <h1 className="mb-8 text-center text-3xl font-bold text-ifpr-black">
-          Efetuar Login
+          Login
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Input

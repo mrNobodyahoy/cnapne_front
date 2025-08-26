@@ -5,7 +5,9 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./routes/protectedRoutes";
 import AppLayout from "./layouts/AppLayout";
 import HomePage from "./pages/HomePage";
-import AlunosPage from "./pages/AlunosPage"; // 👈 Importando a página do seu próprio arquivo
+import AlunosPage from "./pages/AlunosPage"; 
+import ProfissionaisPage from "./pages/ProfessionalsPage";
+
 
 export default function App() {
   return (
@@ -30,6 +32,7 @@ export default function App() {
           <Route path="alunos" element={<AlunosPage />} />
           
           {/* Exemplo: <Route path="configuracoes" element={<SuaPaginaDeConfig />} /> */}
+          <Route path="professionals" element={<ProfissionaisPage/>} />
         </Route>
       </Routes>
     </BrowserRouter>
