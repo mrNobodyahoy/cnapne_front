@@ -20,3 +20,17 @@ export async function updateStudent(id: string, payload: UpdateStudentDTO): Prom
 export async function deleteStudent(id: string): Promise<void> {
   await api.delete(`/students/${id}`);
 }
+
+export async function searchStudentsByName(name: string): Promise<Student[]> {
+  const { data } = await api.get<Student[]>(`/students/search/by-name`, {
+    params: { name },
+  });
+  return data;
+}
+
+export async function searchStudentsByRegistration(registration: string): Promise<Student[]> {
+  const { data } = await api.get<Student[]>(`/students/search/by-registration`, {
+    params: { registration },
+  });
+  return data;
+}

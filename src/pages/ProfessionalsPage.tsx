@@ -30,10 +30,10 @@ export default function ProfissionaisPage() {
   const closeCreateModal = () => setIsCreateModalOpen(false);
 
   const openEditModal = (professional: ReadProfessionalDTO) => {
-    // ✅ CORREÇÃO: Aqui a verificação do profissional é feita, garantindo que o estado não seja nulo.
     setProfessionalToEdit(professional);
     setIsEditModalOpen(true);
   };
+
   const closeEditModal = () => {
     setProfessionalToEdit(null);
     setIsEditModalOpen(false);
@@ -74,13 +74,7 @@ export default function ProfissionaisPage() {
             <h1 className="text-3xl font-bold text-ifpr-black">Lista de Profissionais</h1>
             <p className="mt-1 text-gray-600">Gerencie os profissionais cadastrados no sistema.</p>
           </div>
-          <Button 
-            onClick={openCreateModal} 
-            className="flex items-center gap-2 px-5 py-2 rounded-lg bg-ifpr-green text-white shadow hover:bg-green-700 transition"
-          >
-            <Plus className="h-5 w-5" />
-            Adicionar Profissional
-          </Button>
+          {/* ✅ CABEÇALHO VOLTOU AO ORIGINAL */}
         </div>
 
         {/* Tabela de profissionais */}
@@ -88,7 +82,6 @@ export default function ProfissionaisPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100 border-b-2 border-gray-300">
               <tr>
-                {/* ✅ CORREÇÃO: Adicionadas classes de largura para evitar que a tabela "quebre" e esconda os botões. */}
                 <th className="w-1/4 px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-gray-700">Nome Completo</th>
                 <th className="w-1/4 px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-gray-700">E-mail</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-gray-700">Especialidade</th>
@@ -98,7 +91,6 @@ export default function ProfissionaisPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {/* ✅ CORREÇÃO: A propriedade "key" na <tr> está correta. */}
               {professionals?.map((professional, idx) => (
                 <tr key={professional.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
                   <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{professional.fullName}</td>
@@ -111,8 +103,6 @@ export default function ProfissionaisPage() {
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-center text-sm font-medium flex justify-center gap-2">
-                    {/* ✅ CORREÇÃO: JSX dos botões está correto e bem aninhado. */}
-                    {/* Botão de Edição */}
                     <button
                         onClick={() => openEditModal(professional)}
                         className="p-2 rounded-full text-ifpr-green hover:bg-green-50 hover:text-green-700 transition"
@@ -120,13 +110,11 @@ export default function ProfissionaisPage() {
                     >
                         <Edit className="h-4 w-4" />
                     </button>
-
-                    {/* Botão de Exclusão */}
                     <button
                         onClick={() => handleDeleteProfessional(professional.id, professional.fullName)}
                         className="p-2 rounded-full text-red-500 hover:bg-red-50 hover:hover:text-red-700 transition"
                         title="Deletar Profissional"
-                        disabled={deleteMutation.isPending}
+                        disabled={deleteMutation.isPending && deleteMutation.variables === professional.id}
                     >
                         {deleteMutation.isPending && deleteMutation.variables === professional.id ? (
                         <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -146,9 +134,19 @@ export default function ProfissionaisPage() {
             </div>
           )}
         </div>
+
+        {/* ✅ BOTÃO POSICIONADO ABAIXO DA TABELA */}
+        <div className="mt-6 flex justify-end">
+            <Button
+                onClick={openCreateModal}
+                className="flex items-center gap-2 px-5 py-2 rounded-lg bg-ifpr-green text-white shadow hover:bg-green-700 transition"
+            >
+                <Plus className="h-5 w-5" />
+                Adicionar Profissional
+            </Button>
+        </div>
       </div>
 
-      {/* ✅ CORREÇÃO: Condicional que previne o erro de 'undefined' no modal de edição. */}
       {/* Modal de criação */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -157,7 +155,7 @@ export default function ProfissionaisPage() {
           </div>
         </div>
       )}
-  
+
       {/* Modal de edição */}
       {isEditModalOpen && professionalToEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -166,6 +164,6 @@ export default function ProfissionaisPage() {
           </div>
         </div>
       )}
-      </div>
-    );
+    </div>
+  );
 }

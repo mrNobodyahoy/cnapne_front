@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children }: { children: JSX.Element }) 
       }
     })();
   }, [setSession]);
-
+  
   if (ok === null) return <div className="p-6">Carregando…</div>;
   if (!ok) return <Navigate to="/login" replace />;
   return children;

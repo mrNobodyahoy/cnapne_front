@@ -8,7 +8,7 @@ type Props = {
   errors: FieldErrors<UpdateFormData>;
   control: Control<UpdateFormData>;
 };
-
+    
 export default function ProfessionalEditFormFields({  register,  errors}: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">

@@ -5,31 +5,40 @@ export interface Student {
   email: string;
   registration: string;
   team: string;
-  birthDate: string; 
+  birthDate: string;
   phone: string;
   gender: string;
   ethnicity: string;
   status: string;
+  responsibles?: ResponsibleDTO[];
 }
 export interface CreateStudentDTO {
-    email: string;
-    password: string;
-    completeName: string;
-    registration: string;
-    team: string;
-    birthDate: string;
-    phone: string;
-    gender: string;
-    ethnicity: string;
+  email: string;
+  password: string;
+  completeName: string;
+  registration: string;
+  team: string;
+  birthDate: string;
+  phone: string;
+  gender: string;
+  ethnicity: string;
+  responsibles?: ResponsibleDTO[];
 }
 
 export interface UpdateStudentDTO {
-    email: string;
-    completeName: string;
-    registration: string;
-    team: string;
-    birthDate: string;
-    phone: string;
-    gender: string;
-    ethnicity: string;
+  email: string;
+  completeName: string;
+  registration: string;
+  team: string;
+  birthDate: string;
+  phone: string;
+  gender: string;
+  ethnicity: string;
+}
+
+export interface ResponsibleDTO {
+  completeName: string;
+  email: string;
+  phone: string;
+  kinship: string; 
 }

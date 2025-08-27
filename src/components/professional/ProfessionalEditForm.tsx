@@ -50,8 +50,8 @@ export default function ProfessionalEditForm({
   });
 
   const onSubmit = (data: UpdateFormData) => {
-        console.log('ID do profissional:', professional.id);
-    updateMutation.mutate(data);
+  console.log('Profissional selecionado para edição:', professional);
+      updateMutation.mutate(data);
   };
 
   return (

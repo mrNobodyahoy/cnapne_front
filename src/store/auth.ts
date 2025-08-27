@@ -1,27 +1,30 @@
-// src/store/auth.ts
+// store/auth.ts
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import type { Role } from "../types/auth";
 
-type AuthState = {
-  email: string | null;
-  role: Role | null;
-  setSession: (s: { email: string; role: Role }) => void;
-  clear: () => void;
-};
+export type Role =
+  | "COORDENACAO_CNAPNE"
+  | "EQUIPE_MULTIDISCIPLINAR"
+  | "EQUIPE_AEE"
+  | "ESTUDANTE"
+  | string;
 
-export const useAuth = create<AuthState>()(
-  persist(
-    (set) => ({
-      email: null,
-      role: null,
-      setSession: (s) => set({ email: s.email, role: s.role }),
-      clear: () => set({ email: null, role: null }),
-    }),
-    {
-      name: "cnapne-session",
-      storage: createJSONStorage(() => sessionStorage),
-      version: 1,
-    }
-  )
-);
+export interface AuthRequest {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  role: Role;
+}
+
+interface AuthState {
+  session: AuthResponse | null;
+  setSession: (session: AuthResponse) => void;
+  clearSession: () => void;
+}
+
+export const useAuth = create<AuthState>((set) => ({
+  session: null,  
+  setSession: (session) => set({ session }),
+  clearSession: () => set({ session: null }),
+}));

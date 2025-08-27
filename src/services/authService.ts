@@ -13,6 +13,7 @@ export async function logoutRequest() {
   await api.post("/auth/logout");
 }
 
+
 export async function me(): Promise<MeResponse> {
   const { data } = await api.get<MeResponse>("/auth/me");
   return data;
