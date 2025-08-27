@@ -21,16 +21,9 @@ export async function deleteStudent(id: string): Promise<void> {
   await api.delete(`/students/${id}`);
 }
 
-export async function searchStudentsByName(name: string): Promise<Student[]> {
-  const { data } = await api.get<Student[]>(`/students/search/by-name`, {
-    params: { name },
-  });
-  return data;
-}
-
-export async function searchStudentsByRegistration(registration: string): Promise<Student[]> {
-  const { data } = await api.get<Student[]>(`/students/search/by-registration`, {
-    params: { registration },
+export async function searchStudents(query: string): Promise<Student[]> {
+  const { data } = await api.get<Student[]>('/students/search', {
+    params: { query },
   });
   return data;
 }
