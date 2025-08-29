@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1', // URL DEFINIDA DIRETAMENTE
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_URL,
+    timeout: 10000,
   withCredentials: true, // 🔑 envia/recebe o cookie automaticamente
 });
 
@@ -21,9 +21,5 @@ api.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-// Em src/main.tsx ou src/lib/http.ts
 
-console.log("Variável de ambiente VITE_API_URL:", import.meta.env.VITE_API_URL);
-
-// ... resto do código do arquivo
 export default api;

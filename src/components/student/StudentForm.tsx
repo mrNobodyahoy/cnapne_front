@@ -37,7 +37,9 @@ const createStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
   password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres.'),
   completeName: z.string().min(1, 'Nome completo é obrigatório.'),
-  registration: z.string().min(1, 'Matrícula é obrigatória.'),
+  registration: z.string()
+    .max(11, 'A matrícula deve ter exatamente 11 dígitos.')
+    .regex(/^\d+$/, "A matrícula deve conter apenas números."),
   team: z.string().min(1, 'Turma é obrigatória.'),
   birthDate: z.string().min(1, 'Data de nascimento é obrigatória.').refine((date) => !isNaN(new Date(date).getTime()), 'Data inválida.'),
   phone: z.string().min(1, 'Telefone é obrigatório.'),
@@ -123,7 +125,7 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
     if (!isMinor) {
       delete (payload as any).responsibles;
     }
-    
+
     createMutation.mutate(payload);
   };
 

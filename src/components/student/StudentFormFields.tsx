@@ -1,33 +1,20 @@
 import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
+// Importando as constantes
+import { genderOptions, ethnicityOptions } from '../../lib/constants'; // <<< MUDANÇA
+
 import type { CreateFormData } from './StudentForm';
-import { formatPhone } from '../../lib/formatters'; // <<< MUDANÇA
+import { formatPhone } from '../../lib/formatters';
 
 import Input from '../ui/Input';
-import Select from '../ui/Select'; // <<< MUDANÇA
+import Select from '../ui/Select';
 
 type Props = {
   register: UseFormRegister<CreateFormData>;
   errors: FieldErrors<CreateFormData>;
   control: Control<CreateFormData>;
 };
-
-// Opções para os campos de seleção
-const genderOptions = [
-  { value: 'FEMININO', label: 'Feminino' },
-  { value: 'MASCULINO', label: 'Masculino' },
-  { value: 'OUTRO', label: 'Outro' },
-  { value: 'NAO_INFORMAR', label: 'Prefiro não informar' },
-];
-
-const ethnicityOptions = [
-  { value: 'BRANCA', label: 'Branca' },
-  { value: 'PARDA', label: 'Parda' },
-  { value: 'PRETA', label: 'Preta' },
-  { value: 'AMARELA', label: 'Amarela' },
-  { value: 'INDIGENA', label: 'Indígena' },
-];
 
 
 export default function StudentFormFields({ register, errors, control }: Props) {
@@ -64,6 +51,7 @@ export default function StudentFormFields({ register, errors, control }: Props) 
         id="registration"
         placeholder="Digite a matrícula"
         {...register("registration")}
+        maxLength={11}
         error={errors.registration?.message}
       />
 
@@ -99,22 +87,22 @@ export default function StudentFormFields({ register, errors, control }: Props) 
         )}
       />
 
-      {/* <<< MUDANÇA: Input de texto trocado por Select */}
+      {/* Usando a constante importada */}
       <Select
         label="Gênero"
         id="gender"
         placeholder="Selecione o gênero"
-        options={genderOptions}
+        options={genderOptions} // <<< MUDANÇA
         {...register("gender")}
         error={errors.gender?.message}
       />
-      
-      {/* <<< MUDANÇA: Input de texto trocado por Select */}
+
+      {/* Usando a constante importada */}
       <Select
         label="Etnia/Raça"
         id="ethnicity"
         placeholder="Selecione a etnia/raça"
-        options={ethnicityOptions}
+        options={ethnicityOptions} // <<< MUDANÇA
         {...register("ethnicity")}
         error={errors.ethnicity?.message}
       />

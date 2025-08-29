@@ -1,26 +1,29 @@
-// src/routes/ProtectedRoute.tsx
-import { Navigate } from "react-router-dom";
-import { useEffect, useState, type JSX } from "react";
-import { me } from "../services/authService";
+// src/routes/protectedRoutes.tsx
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../store/auth";
 
-export default function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const [ok, setOk] = useState<boolean | null>(null);
-  const { setSession } = useAuth();
+interface ProtectedRouteProps {
+  allowedRoles: string[];
+}
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const info = await me(); // se 401 cai no catch
-        setSession(info);
-        setOk(true);
-      } catch {
-        setOk(false);
-      }
-    })();
-  }, [setSession]);
-  
-  if (ok === null) return <div className="p-6">Carregando…</div>;
-  if (!ok) return <Navigate to="/login" replace />;
-  return children;
+export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
+  const { session, isLoading } = useAuth();
+
+  // 1. Enquanto a sessão inicial está sendo verificada, mostramos um loader
+  if (isLoading) {
+    return <div className="flex h-screen items-center justify-center">Carregando sessão...</div>;
+  }
+
+  // 2. Se não há sessão (verificação concluída), redireciona para login
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 3. Se há sessão, mas o perfil não está na lista de permitidos, redireciona
+  if (!allowedRoles.includes(session.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // 4. Se tudo estiver certo, permite o acesso à rota
+  return <Outlet />;
 }

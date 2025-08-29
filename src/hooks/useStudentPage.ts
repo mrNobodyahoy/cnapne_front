@@ -1,44 +1,55 @@
 // src/hooks/useStudentsPage.ts
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { getAllStudents, deleteStudent, searchStudents } from '../services/studentService';
-import type { Student } from '../types/student';
+// 1. Importe tanto Student quanto StudentSummary
+import type { Student, StudentSummary } from '../types/student';
 
 export function useStudentsPage() {
+  // ... (os useStates continuam os mesmos)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [isDocumentsModalOpen, setIsDocumentsModalOpen] = useState(false);
   const [studentForDocs, setStudentForDocs] = useState<Student | null>(null);
-
   const [searchTerm, setSearchTerm] = useState('');
 
   const queryClient = useQueryClient();
 
-  // Data fetching com React Query
-  const { data: students, isLoading, isError, error } = useQuery<Student[], Error>({
+  // 2. ALTERAÇÃO PRINCIPAL: A query agora é tipada para retornar StudentSummary[]
+  const { data: students, isLoading, isError, error } = useQuery<StudentSummary[], Error>({
     queryKey: ['students', searchTerm],
-    queryFn: () => {
-      if (!searchTerm.trim()) return getAllStudents();
+    queryFn: async () => {
+      // Se não houver busca, busca todos e CONVERTE para o formato de sumário
+      if (!searchTerm.trim()) {
+        const fullStudents = await getAllStudents();
+        // 3. Converte cada Student para StudentSummary
+        return fullStudents.map(student => ({
+          id: student.id,
+          completeName: student.completeName,
+          registration: student.registration,
+          team: student.team,
+          status: student.status,
+        }));
+      }
+      // Se houver busca, a função searchStudents já retorna o formato correto (StudentSummary[])
       return searchStudents(searchTerm);
     },
     placeholderData: keepPreviousData,
   });
 
-  // Mutação para deletar
+  // ... (o restante do hook, como deleteMutation e os handlers, continua o mesmo)
   const deleteMutation = useMutation({
     mutationFn: deleteStudent,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
-      // Adicionar notificação de sucesso aqui (ex: toast.success('Estudante deletado!'))
     },
     onError: (err: any) => {
-      // Adicionar notificação de erro aqui (ex: toast.error(err.message))
-      alert('Erro ao deletar estudante: ' + err.message); // Manter por enquanto
+      alert('Erro ao deletar estudante: ' + err.message);
     },
   });
 
-  // Handlers (funções de manipulação)
   const handleDeleteStudent = (id: string, name: string) => {
     if (window.confirm(`Tem certeza que deseja deletar o estudante ${name}?`)) {
       deleteMutation.mutate(id);
@@ -60,9 +71,8 @@ export function useStudentsPage() {
   const openCreateModal = () => setIsCreateModalOpen(true);
   const closeCreateModal = () => setIsCreateModalOpen(false);
 
-  // Retornamos tudo que a UI precisa para renderizar
   return {
-    students,
+    students, // Este agora é do tipo StudentSummary[] | undefined
     isLoading,
     isError,
     error,

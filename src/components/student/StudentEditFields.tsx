@@ -1,8 +1,10 @@
-// src/components/student/StudentEditFormFields.tsx
 import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
-import Input from '../ui/Input';
-import type { UpdateFormData } from './StudentEditForm';
 import { Controller } from 'react-hook-form';
+import Input from '../ui/Input';
+import Select from '../ui/Select';
+import { formatPhone } from '../../lib/formatters'
+import type { UpdateFormData } from './StudentEditForm';
+import { genderOptions, ethnicityOptions } from '../../lib/constants';
 
 type Props = {
   register: UseFormRegister<UpdateFormData>;
@@ -10,23 +12,12 @@ type Props = {
   control: Control<UpdateFormData>;
 };
 
-// Máscara de telefone
-const formatPhone = (value: string) => {
-  let cleaned = value.replace(/\D/g, "");
-  if (cleaned.length > 11) cleaned = cleaned.slice(0, 11);
-
-  if (cleaned.length <= 2) return `(${cleaned}`;
-  if (cleaned.length <= 7) return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
-  return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
-};
 
 export default function StudentEditFormFields({ register, errors, control }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
       <Input
         label="Nome Completo"
-        type="text"
-        placeholder="Digite o nome completo"
         id="completeName"
         {...register("completeName")}
         error={errors.completeName?.message}
@@ -34,8 +25,6 @@ export default function StudentEditFormFields({ register, errors, control }: Pro
 
       <Input
         label="E-mail"
-        type="email"
-        placeholder="exemplo@email.com"
         id="email"
         {...register("email")}
         error={errors.email?.message}
@@ -43,17 +32,14 @@ export default function StudentEditFormFields({ register, errors, control }: Pro
 
       <Input
         label="Matrícula"
-        type="text"
-        placeholder="Digite a matrícula"
         id="registration"
         {...register("registration")}
+        maxLength={11}
         error={errors.registration?.message}
       />
 
       <Input
         label="Turma"
-        type="text"
-        placeholder="Digite a turma"
         id="team"
         {...register("team")}
         error={errors.team?.message}
@@ -74,7 +60,6 @@ export default function StudentEditFormFields({ register, errors, control }: Pro
           <Input
             label="Telefone"
             type="tel"
-            placeholder="(99) 99999-9999"
             id="phone"
             value={field.value || ""}
             onChange={(e) => field.onChange(formatPhone(e.target.value))}
@@ -83,22 +68,24 @@ export default function StudentEditFormFields({ register, errors, control }: Pro
         )}
       />
 
-      <Input
+      <Select
         label="Gênero"
-        type="text"
-        placeholder="Informe o gênero"
         id="gender"
         {...register("gender")}
+        options={genderOptions} // Agora esta variável é reconhecida
+        placeholder="Selecione um gênero"
         error={errors.gender?.message}
+        hidePlaceholderOnValue
       />
 
-      <Input
+      <Select
         label="Etnia"
-        type="text"
-        placeholder="Informe a etnia"
         id="ethnicity"
         {...register("ethnicity")}
+        options={ethnicityOptions} // E esta também
+        placeholder="Selecione uma etnia"
         error={errors.ethnicity?.message}
+        hidePlaceholderOnValue
       />
     </div>
   );

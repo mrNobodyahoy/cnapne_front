@@ -19,8 +19,20 @@ export async function deleteDocument(studentId: string, docId: string): Promise<
   await api.delete(`/students/${studentId}/documents/${docId}`);
 }
 
+// FUNÇÃO CORRIGIDA E SEGURA PARA VISUALIZAR
+export async function viewDocument(studentId: string, docId: string): Promise<void> {
+  const response = await api.get(`/students/${studentId}/documents/${docId}`, {
+    params: { disposition: 'inline' }, // Pede para o backend servir para visualização
+    responseType: 'blob',
+  });
+  const fileURL = URL.createObjectURL(response.data);
+  window.open(fileURL, '_blank');
+}
+
+// FUNÇÃO CORRIGIDA PARA BAIXAR
 export async function downloadDocument(studentId: string, docId: string, fileName: string): Promise<void> {
   const response = await api.get(`/students/${studentId}/documents/${docId}`, {
+    params: { disposition: 'attachment' }, // Pede para o backend servir para download
     responseType: 'blob',
   });
 

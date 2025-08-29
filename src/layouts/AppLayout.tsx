@@ -1,12 +1,13 @@
+// src/layouts/AppLayout.tsx
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 
 export default function AppLayout() {
   return (
-    // ✅ CORREÇÃO: Adicionado o container flexível que alinha a sidebar e o conteúdo principal.
-    <div className="flex">
+    <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
-      <main className="flex-1 bg-gray-50 min-h-screen">
+      {/* Adiciona margem à esquerda igual à largura da sidebar (w-64 = 16rem = 256px) */}
+      <main className="flex-1 ml-64">
         <div className="p-8">
           <Outlet />
         </div>
