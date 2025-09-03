@@ -1,62 +1,74 @@
-    // src/components/student/StudentFormFields.tsx
-    import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
-    import Input from '../ui/Input';
-    import type { CreateFormData } from './ProfessionalForm';
+import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
+import Input from '../ui/Input';
+import Select from '../ui/Select';
+import type { CreateFormData } from './ProfessionalForm';
 
-    type Props = {
-    register: UseFormRegister<CreateFormData>;
-    errors: FieldErrors<CreateFormData>;
-    control: Control<CreateFormData>;
-    };
+type Props = {
+  register: UseFormRegister<CreateFormData>;
+  errors: FieldErrors<CreateFormData>;
+  control: Control<CreateFormData>;
+};
 
+const specialtyOptions = [
+  { value: 'pedagogia', label: 'Pedagogia' },
+  { value: 'psicologia', label: 'Psicologia' },
+  { value: 'assistencia-social', label: 'Assistência Social' },
+  { value: 'outros', label: 'Outros' },
+];
 
-    export default function ProfessionalFormFields({ register, errors }: Props) {
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-    <Input
-    label="Nome Completo"
-    type="text"
-    placeholder="Digite o nome completo"
-    id="fullName"
-    {...register("fullName")}
-    error={errors.fullName?.message}
-    />
+const roleOptions = [
+  { value: 'COORDENACAO_CNAPNE', label: 'Coordenação CNAPNE' },
+  { value: 'EQUIPE_MULTIDISCIPLINAR', label: 'Equipe Multidisciplinar' },
+  { value: 'EQUIPE_AEE', label: 'Equipe AEE' },
+];
 
-    <Input
-    label="E-mail"
-    type="email"
-    placeholder="exemplo@email.com"
-    id="email"
-    {...register("email")}
-    error={errors.email?.message}
-    />
+export default function ProfessionalFormFields({ register, errors }: Props) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+      <Input
+        label="Nome Completo"
+        type="text"
+        placeholder="Digite o nome completo"
+        id="fullName"
+        {...register("fullName")}
+        error={errors.fullName?.message}
+      />
 
-    <Input
-    label="Senha"
-    type="password"
-    placeholder="Digite uma senha"
-    id="password"
-    {...register("password")}
-    error={errors.password?.message}
-    />
+      <Input
+        label="E-mail"
+        type="email"
+        placeholder="exemplo@email.com"
+        id="email"
+        {...register("email")}
+        error={errors.email?.message}
+      />
 
-    <Input
-    label="Especialidade"
-    type="text"
-    placeholder="Digite a especialidade"
-    id="specialty"
-    {...register("specialty")}
-    error={errors.specialty?.message}
-    />
+      <Input
+        label="Senha"
+        type="password"
+        placeholder="Digite uma senha"
+        id="password"
+        {...register("password")}
+        error={errors.password?.message}
+      />
 
-    <Input
-    label="Função"
-    type="text"
-    placeholder="Digite a função"
+      <Select
+        label="Especialidade"
+        id="specialty"
+        {...register("specialty")}
+        error={errors.specialty?.message}
+        options={specialtyOptions}
+        placeholder="Selecione a especialidade"
+      />
+
+      <Select
+        label="Função"
         id="role"
         {...register("role")}
         error={errors.role?.message}
-    />
-        </div>
-    );
-    }
+        options={roleOptions}
+        placeholder="Selecione a função"
+      />
+    </div>
+  );
+}

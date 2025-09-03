@@ -2,21 +2,20 @@
 
 import { createBrowserRouter } from "react-router-dom";
 
-// Layouts, Páginas e Placeholders...
+// Layouts e Páginas
 import AppLayout from "./layouts/AppLayout";
-import StudentLayout from "./layouts/StudentLayout";
-import Login from "./pages/Login";
+import Login from "./pages/common/Login";
 import ProtectedRoute from "./routes/protectedRoutes";
-import HomePage from "./pages/HomePage";
-import AlunosPage from "./pages/AlunosPage";
-import ProfissionaisPage from "./pages/ProfessionalsPage";
-import StudentProfilePage from "./pages/StudentProfilePage";
-import StudentDashboardPage from "./pages/StudentDashboardPage";
+import HomePage from "./pages/adm/HomePage";
+import AlunosPage from "./pages/adm/AlunosPage";
+import ProfissionaisPage from "./pages/adm/ProfessionalsPage";
+import StudentProfilePage from "./pages/adm/StudentProfilePage";
+import StudentDashboardPage from "./pages/student/StudentDashboardPage";
 
-// Componentes placeholder que você já tinha
+import StudentOwnProfilePage from "./pages/student/StudentOwnProfilePage";
+import StudentDocumentsPage from "./pages/student/StudentDocumentsPage";
+
 const AdminConfigPage = () => <h1 className="text-3xl font-bold">Página de Admin</h1>;
-const StudentDocumentsPage = () => <h1 className="text-3xl font-bold">Meus Documentos</h1>;
-const StudentOwnProfilePage = () => <h1 className="text-3xl font-bold">Meu Perfil</h1>;
 
 // Definindo as rotas como um array de objetos
 const routes = [
@@ -58,11 +57,12 @@ const routes = [
     children: [
       {
         path: "/dashboard",
-        element: <StudentLayout />,
+        element: <AppLayout />,
         children: [
           { index: true, element: <StudentDashboardPage /> },
-          { path: "documentos", element: <StudentDocumentsPage /> },
           { path: "perfil", element: <StudentOwnProfilePage /> },
+          { path: "documentos", element: <StudentDocumentsPage /> },
+
         ],
       },
     ],

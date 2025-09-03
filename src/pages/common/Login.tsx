@@ -3,12 +3,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { loginRequest } from "../services/authService";
-import { useAuth, type Role } from "../store/auth";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
-import AuthCard from "../components/auth/AuthCard";
-import logoIfpr from '../assets/if-vertical.png';
+import { loginRequest } from "../../services/authService";
+import { useAuth, type Role } from "../../store/auth";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import AuthCard from "../../components/auth/AuthCard";
+import logoIfpr from '../../assets/if-vertical.png';
 
 const schema = z.object({
   email: z.string().email("Informe um e-mail válido."),

@@ -1,16 +1,17 @@
 // src/pages/AlunosPage.tsx
 import { LoaderCircle, AlertTriangle, Plus } from 'lucide-react';
-import { useStudentsPage } from '../hooks/useStudentPage';
+import { useStudentsPage } from '../../hooks/useStudentPage';
 
 // Componentes da página
-import StudentPageHeader from '../components/student/StudentPageHeader';
-import StudentCards from '../components/student/StudentListCard'; // 1. Corrigido: Importando o componente correto.
-import StudentForm from '../components/student/StudentForm';
-import Button from '../components/ui/Button';
-import Modal from '../components/ui/Modal';
+import StudentPageHeader from '../../components/student/StudentPageHeader';
+import StudentCards from '../../components/student/StudentListCard'; // 1. Corrigido: Importando o componente correto.
+import StudentForm from '../../components/student/StudentForm';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
+
+type Status = 'ALL' | 'ATIVO' | 'INATIVO';
 
 export default function AlunosPage() {
-  // 2. Simplificado: Pegamos apenas o que esta página realmente precisa do hook.
   const {
     students,
     isLoading,
@@ -18,10 +19,16 @@ export default function AlunosPage() {
     error,
     searchTerm,
     setSearchTerm,
+    statusFilter,
+    setStatusFilter,
     isCreateModalOpen,
     openCreateModal,
     closeCreateModal,
   } = useStudentsPage();
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value as Status);
+  };
 
   if (isLoading) {
     return (
@@ -49,8 +56,12 @@ export default function AlunosPage() {
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto">
-        <StudentPageHeader searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
+        <StudentPageHeader
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          statusFilter={statusFilter}
+          onStatusChange={handleStatusChange}
+        />
         {/* 3. Corrigido: Usando o StudentCards e passando apenas a prop 'students'. */}
         <StudentCards students={students} />
 

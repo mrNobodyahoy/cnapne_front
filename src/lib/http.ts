@@ -1,21 +1,19 @@
-// src/lib/http.ts
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-    timeout: 10000,
-  withCredentials: true, // 🔑 envia/recebe o cookie automaticamente
+  timeout: 10000,
+  withCredentials: true, // envia/recebe o cookie automaticamente
 });
 
-
-// nada de Authorization header (jwt é HttpOnly)
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     const status = err?.response?.status;
     if (status === 401 && location.pathname !== "/login") {
-      // sessão inválida/expirada
-      sessionStorage.removeItem("cnapne-session"); // guardamos apenas dados não-sensíveis (role/email)
+      toast.error("Sua sessão expirou. Por favor, faça login novamente.");
+      sessionStorage.removeItem("cnapne-session");
       location.href = "/login";
     }
     return Promise.reject(err);

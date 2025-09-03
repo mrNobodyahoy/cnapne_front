@@ -1,6 +1,6 @@
-// src/components/professional/ProfessionalEditFormFields.tsx
 import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
 import Input from '../ui/Input';
+import Select from '../ui/Select';
 import type { UpdateFormData } from './ProfessionalEditForm';
 
 type Props = {
@@ -8,8 +8,22 @@ type Props = {
   errors: FieldErrors<UpdateFormData>;
   control: Control<UpdateFormData>;
 };
-    
-export default function ProfessionalEditFormFields({  register,  errors}: Props) {
+
+const specialtyOptions = [
+  { value: 'pedagogia', label: 'Pedagogia' },
+  { value: 'psicologia', label: 'Psicologia' },
+  { value: 'assistencia-social', label: 'Assistência Social' },
+  { value: 'outros', label: 'Outros' },
+];
+
+const roleOptions = [
+  { value: 'coordenador', label: 'Coordenador' },
+  { value: 'professor', label: 'Professor' },
+  { value: 'tecnico', label: 'Técnico' },
+  { value: 'outros', label: 'Outros' },
+];
+
+export default function ProfessionalEditFormFields({ register, errors }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
       <Input
@@ -30,22 +44,22 @@ export default function ProfessionalEditFormFields({  register,  errors}: Props)
         error={errors.email?.message}
       />
 
-      <Input
+      <Select
         label="Especialidade"
-        type="text"
-        placeholder="Digite a especialidade"
         id="specialty"
         {...register("specialty")}
         error={errors.specialty?.message}
+        options={specialtyOptions}
+        placeholder="Selecione a especialidade"
       />
 
-      <Input
+      <Select
         label="Função"
-        type="text"
-        placeholder="Digite a função"
         id="role"
         {...register("role")}
         error={errors.role?.message}
+        options={roleOptions}
+        placeholder="Selecione a função"
       />
 
       <div className="flex items-center gap-2 col-span-2">

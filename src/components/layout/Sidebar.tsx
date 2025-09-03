@@ -1,6 +1,8 @@
 // src/components/layout/Sidebar.tsx
+
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Users, BookUser, ShieldCheck, LogOut } from "lucide-react";
+// 1. Importamos os ícones que estavam no StudentNavbar
+import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle } from "lucide-react";
 import { logoutRequest } from "../../services/authService";
 import { useAuth, type Role } from "../../store/auth";
 import Button from "../ui/Button";
@@ -21,7 +23,7 @@ export default function Sidebar() {
 
   const getNavLinks = (role: Role | undefined) => {
     const baseLinks = [{ to: "/", label: "Início", icon: Home }];
-    
+
     const staffLinks = [
       ...baseLinks,
       { to: "/alunos", label: "Alunos", icon: Users },
@@ -39,8 +41,12 @@ export default function Sidebar() {
       case 'EQUIPE_AEE':
         return staffLinks;
 
-      case 'ESTUDANTE': // Estudantes não usam esta sidebar, mas é uma boa prática prever
-        return [{ to: "/dashboard", label: "Meu Painel", icon: Home }];
+      // 2. Adicionamos os links corretos para o estudante aqui
+      case 'ESTUDANTE':
+        return [
+          { to: "/dashboard", label: "Meu Painel", icon: LayoutDashboard },
+          { to: "/dashboard/perfil", label: "Meu Perfil", icon: UserCircle },
+          { to: "/dashboard/documentos", label: "Documentos", icon: FileText },];
 
       default:
         return baseLinks;
@@ -48,12 +54,16 @@ export default function Sidebar() {
   };
 
   const navLinks = getNavLinks(session?.role);
+  const isStudent = session?.role === 'ESTUDANTE';
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 border-r bg-white flex flex-col">
       <div className="p-6">
         <h1 className="text-2xl font-bold text-ifpr-green">CNAPNE</h1>
-        <p className="text-sm text-gray-500">Painel de Controle</p>
+        {/* 3. O subtítulo muda dependendo do tipo de usuário */}
+        <p className="text-sm text-gray-500">
+          {isStudent ? 'Painel do Estudante' : 'Painel de Controle'}
+        </p>
       </div>
       <nav className="flex flex-col p-4 flex-grow">
         {navLinks.map((link) => (
@@ -64,6 +74,11 @@ export default function Sidebar() {
         ))}
       </nav>
       <div className="p-4 border-t">
+        <div className="mb-4 text-center">
+          <p className="text-sm font-medium text-gray-800" title={session?.email}>
+            {session?.email}
+          </p>
+        </div>
         <Button onClick={handleLogout} className="flex w-full items-center rounded-md px-4 py-3 text-gray-700 transition hover:bg-red-50 hover:text-red-600">
           <LogOut className="mr-3 h-5 w-5" />
           Sair

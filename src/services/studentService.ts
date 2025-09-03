@@ -31,3 +31,18 @@ export async function searchStudents(query: string): Promise<StudentSummary[]> {
   });
   return data;
 }
+
+export async function getStudentsByStatus(status: string): Promise<StudentSummary[]> {
+  const { data } = await api.get<StudentSummary[]>('/students/filter', {
+    params: {
+      status, 
+    },
+  });
+  return data;
+}
+
+
+export async function getStudentMe(): Promise<Student> {
+  const { data } = await api.get<Student>("/students/me");
+  return data;
+}

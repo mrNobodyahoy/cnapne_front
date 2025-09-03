@@ -1,12 +1,12 @@
 // src/pages/ProfissionaisPage.tsx
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAllProfessionals, deleteProfessional } from '../services/professionalService';
+import { getAllProfessionals, deleteProfessional } from '../../services/professionalService';
 import { AlertTriangle, LoaderCircle, Plus, Edit, Trash } from 'lucide-react';
-import type { ReadProfessionalDTO } from '../types/professional';
+import type { ReadProfessionalDTO } from '../../types/professional';
 import { useState } from 'react';
-import Button from '../components/ui/Button';
-import ProfessionalForm from '../components/professional/ProfessionalForm';
-import ProfessionalEditForm from '../components/professional/ProfessionalEditForm';
+import Button from '../../components/ui/Button';
+import ProfessionalForm from '../../components/professional/ProfessionalForm';
+import ProfessionalEditForm from '../../components/professional/ProfessionalEditForm';
 
 export default function ProfissionaisPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

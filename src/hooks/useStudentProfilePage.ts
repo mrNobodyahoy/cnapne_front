@@ -25,9 +25,7 @@ export function useStudentProfilePage() {
   const deleteMutation = useMutation({
     mutationFn: deleteStudent,
     onSuccess: () => {
-      // Invalida a lista de alunos para que ela seja atualizada
       queryClient.invalidateQueries({ queryKey: ['students'] });
-      // Navega de volta para a lista de alunos após o sucesso
       navigate('/alunos');
     },
     onError: (err: any) => {

@@ -1,15 +1,15 @@
 // src/pages/StudentProfilePage.tsx
 import { Link } from 'react-router-dom';
 import { LoaderCircle, ArrowLeft, Edit, Trash, FileArchive } from 'lucide-react';
-import { useStudentProfilePage } from '../hooks/useStudentProfilePage';
+import { useStudentProfilePage } from '../../hooks/useStudentProfilePage';
 
 // Componentes
-import ResponsibleList from '../components/student/ResponsibleList';
-import Button from '../components/ui/Button';
-import Modal from '../components/ui/Modal';
-import StudentEditForm from '../components/student/StudentEditForm';
-import StudentDocumentsModal from '../components/document/StudentDocumentsModal';
-import { formatPhone } from '../lib/formatters';
+import ResponsibleList from '../../components/student/ResponsibleList';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
+import StudentEditForm from '../../components/student/StudentEditForm';
+import StudentDocumentsModal from '../../components/document/StudentDocumentsModal';
+import { formatPhone } from '../../lib/formatters';
 
 export default function StudentProfilePage() {
   const {

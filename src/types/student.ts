@@ -1,4 +1,3 @@
-// Este tipo reflete o seu ReadStudentDTO
 export interface Student {
   id: string;
   completeName: string;
@@ -12,6 +11,7 @@ export interface Student {
   status: string;
   responsibles?: ResponsibleDTO[];
 }
+
 export interface CreateStudentDTO {
   email: string;
   password: string;
@@ -41,4 +41,12 @@ export interface ResponsibleDTO {
   email: string;
   phone: string;
   kinship: string; 
+}
+
+export interface StudentSummary {
+  id: string;
+  completeName: string;
+  registration: string;
+  team: string;
+  status: string;
 }

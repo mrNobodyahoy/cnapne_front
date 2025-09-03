@@ -1,4 +1,4 @@
-import { useAuth } from "../store/auth";
+import { useAuth } from "../../store/auth";
 
 export default function StudentDashboardPage() {
   const { session } = useAuth();

@@ -1,4 +1,5 @@
 // src/components/student/StudentEditForm.tsx
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,9 +8,9 @@ import Button from '../ui/Button';
 import { updateStudent } from '../../services/studentService';
 import type { UpdateStudentDTO, Student } from '../../types/student';
 
-import StudentEditFields from './StudentEditFields'; // Verifique o nome deste arquivo
+import StudentEditFields from './StudentEditFields';
 
-// O schema de validação continua o mesmo
+// Schema de validação
 const updateStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
   completeName: z.string().min(1, 'Nome completo é obrigatório.'),
@@ -21,16 +22,20 @@ const updateStudentSchema = z.object({
   phone: z.string().min(1, 'Telefone é obrigatório.'),
   gender: z.string().min(1, 'Gênero é obrigatório.'),
   ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
+  // MUDANÇA AQUI: Ajustado para os valores em português
+  status: z.enum(["ATIVO", "INATIVO"], {
+    required_error: "O status é obrigatório"
+  }),
 });
 
 export type UpdateFormData = z.infer<typeof updateStudentSchema>;
 
-export default function StudentEditForm({ 
-  onClose, 
-  student 
-}: { 
-  onClose: () => void; 
-  student: Student 
+export default function StudentEditForm({
+  onClose,
+  student,
+}: {
+  onClose: () => void;
+  student: Student;
 }) {
   const queryClient = useQueryClient();
 
@@ -47,15 +52,19 @@ export default function StudentEditForm({
       email: student.email || '',
       registration: student.registration || '',
       team: student.team || '',
-      birthDate: student.birthDate ? new Date(student.birthDate).toISOString().split('T')[0] : "",
+      birthDate: student.birthDate
+        ? new Date(student.birthDate).toISOString().split('T')[0]
+        : '',
       phone: student.phone || '',
       gender: student.gender || '',
       ethnicity: student.ethnicity || '',
+      status: (student.status as "ATIVO" | "INATIVO") || "ATIVO",
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedStudent: UpdateStudentDTO) => updateStudent(student.id, updatedStudent),
+    mutationFn: (updatedStudent: UpdateStudentDTO) =>
+      updateStudent(student.id, updatedStudent),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['student', student.id] });
       queryClient.invalidateQueries({ queryKey: ['students'] });
@@ -67,25 +76,19 @@ export default function StudentEditForm({
   });
 
   const onSubmit = (data: UpdateFormData) => {
-    const payload = {...data, phone: data.phone.replace(/[^0-9]/g, ''),
+    const payload = {
+      ...data,
+      phone: data.phone.replace(/[^0-9]/g, ''), // limpa formatação do telefone
     };
     updateMutation.mutate(payload);
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="space-y-6"
-    >
-      
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <StudentEditFields register={register} control={control} errors={errors} />
 
       <div className="flex justify-end gap-4 pt-4 mt-6 border-t">
-        <Button 
-          type="button" 
-          onClick={onClose} 
-          variant="secondary" 
-        >
+        <Button type="button" onClick={onClose} variant="secondary">
           Cancelar
         </Button>
         <Button type="submit" loading={isSubmitting || updateMutation.isPending}>
