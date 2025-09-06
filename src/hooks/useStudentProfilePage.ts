@@ -12,7 +12,6 @@ export function useStudentProfilePage() {
 
   // Estado para os modais
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDocumentsModalOpen, setIsDocumentsModalOpen] = useState(false);
 
   // Busca os dados do estudante
   const { data: student, isLoading, isError, error } = useQuery<Student, Error>({
@@ -47,9 +46,6 @@ export function useStudentProfilePage() {
     isEditModalOpen,
     openEditModal: () => setIsEditModalOpen(true),
     closeEditModal: () => setIsEditModalOpen(false),
-    isDocumentsModalOpen,
-    openDocumentsModal: () => setIsDocumentsModalOpen(true),
-    closeDocumentsModal: () => setIsDocumentsModalOpen(false),
     handleDelete,
     isDeleting: deleteMutation.isPending,
   };

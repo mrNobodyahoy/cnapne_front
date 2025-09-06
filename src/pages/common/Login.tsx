@@ -10,6 +10,9 @@ import Button from "../../components/ui/Button";
 import AuthCard from "../../components/auth/AuthCard";
 import logoIfpr from '../../assets/if-vertical.png';
 
+// Ícones
+import { Globe, Phone } from "lucide-react";
+
 const schema = z.object({
   email: z.string().email("Informe um e-mail válido."),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres."),
@@ -67,6 +70,31 @@ export default function Login() {
             Entrar
           </Button>
         </form>
+
+        {/* Contato CNAPNE */}
+        <div className="mt-8 border-t pt-4 text-center text-sm text-gray-600">
+          <p className="mb-2 font-medium">Contato CNAPNE</p>
+          <div className="flex items-center justify-center gap-6">
+            <a
+              href="https://ifpr.edu.br/irati/cnapne/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-green-700 transition-colors"
+            >
+              <Globe size={18} />
+              <span>Site IFPR</span>
+            </a>
+            <a
+              href="api.whatsapp.com/send/?text=CNAPNE+https%3A%2F%2Fifpr.edu.br%2Firati%2Fcnapne%2F&type=custom_url&app_absent=0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-green-700 transition-colors"
+            >
+              <Phone size={18} />
+              <span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
       </AuthCard>
     </div>
   );

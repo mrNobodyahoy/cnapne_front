@@ -1,6 +1,6 @@
 // src/pages/StudentProfilePage.tsx
 import { Link } from 'react-router-dom';
-import { LoaderCircle, ArrowLeft, Edit, Trash, FileArchive } from 'lucide-react';
+import { LoaderCircle, ArrowLeft, Edit, Trash } from 'lucide-react';
 import { useStudentProfilePage } from '../../hooks/useStudentProfilePage';
 
 // Componentes
@@ -8,7 +8,7 @@ import ResponsibleList from '../../components/student/ResponsibleList';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
 import StudentEditForm from '../../components/student/StudentEditForm';
-import StudentDocumentsModal from '../../components/document/StudentDocumentsModal';
+import StudentDocumentsList from "../../components/document/StudentDocumentsList";
 import { formatPhone } from '../../lib/formatters';
 
 export default function StudentProfilePage() {
@@ -20,9 +20,6 @@ export default function StudentProfilePage() {
     isEditModalOpen,
     openEditModal,
     closeEditModal,
-    isDocumentsModalOpen,
-    openDocumentsModal,
-    closeDocumentsModal,
     handleDelete,
     isDeleting,
   } = useStudentProfilePage();
@@ -68,9 +65,6 @@ export default function StudentProfilePage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={openDocumentsModal} variant="outline" title="Documentos">
-              <FileArchive className="h-4 w-4" />
-            </Button>
             <Button onClick={openEditModal} variant="outline" title="Editar">
               <Edit className="h-4 w-4" />
             </Button>
@@ -126,6 +120,8 @@ export default function StudentProfilePage() {
             <p>{student?.ethnicity}</p>
           </div>
         </div>
+        <div className="border-t" />
+        <StudentDocumentsList student={student!} />
 
         {/* LISTA DE RESPONSÁVEIS */}
         {student?.responsibles && student.responsibles.length > 0 && (
@@ -140,17 +136,6 @@ export default function StudentProfilePage() {
       <Modal isOpen={isEditModalOpen} onClose={closeEditModal} title="Editar Estudante">
         {student && (
           <StudentEditForm student={student} onClose={closeEditModal} />
-        )}
-      </Modal>
-
-      {/* MODAL DOCUMENTOS */}
-      <Modal
-        isOpen={isDocumentsModalOpen}
-        onClose={closeDocumentsModal}
-        title={`Documentos de ${student?.completeName}`}
-      >
-        {student && (
-          <StudentDocumentsModal student={student} onClose={closeDocumentsModal} />
         )}
       </Modal>
     </div>

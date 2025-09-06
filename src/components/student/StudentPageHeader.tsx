@@ -1,11 +1,13 @@
 // src/components/student/StudentPageHeader.tsx
-import { Search } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
+import Button from '../ui/Button';
 
 interface StudentPageHeaderProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   statusFilter: string;
   onStatusChange: (value: string) => void;
+  onAddStudent: () => void; // 🔹 novo prop para acionar modal
 }
 
 export default function StudentPageHeader({
@@ -13,6 +15,7 @@ export default function StudentPageHeader({
   onSearchChange,
   statusFilter,
   onStatusChange,
+  onAddStudent,
 }: StudentPageHeaderProps) {
   return (
     <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -22,7 +25,7 @@ export default function StudentPageHeader({
         <p className="mt-1 text-gray-600">Gerencie os estudantes cadastrados no sistema.</p>
       </div>
 
-      {/* Busca + Filtro */}
+      {/* Busca + Filtro + Botão */}
       <div className="flex items-center gap-3">
         {/* Campo de busca */}
         <div className="flex items-center border rounded-lg px-3 py-2 shadow-sm bg-white">
@@ -46,6 +49,14 @@ export default function StudentPageHeader({
           <option value="ATIVO">Ativos</option>
           <option value="INATIVO">Inativos</option>
         </select>
+
+        {/* Botão Adicionar Estudante */}
+        <Button
+          onClick={onAddStudent}
+          className="flex items-center gap-2 px-5 py-2 rounded-xl bg-ifpr-green text-white shadow-md hover:bg-green-700 transition font-medium"
+        >
+          <Plus className="h-5 w-5" /> Adicionar
+        </Button>
       </div>
     </div>
   );

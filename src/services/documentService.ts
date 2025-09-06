@@ -6,14 +6,21 @@ export async function getDocuments(studentId: string): Promise<Document[]> {
   return data;
 }
 
-export async function uploadDocument(studentId: string, file: File, type: string): Promise<Document> {
+export const uploadDocument = (
+  studentId: string,
+  file: File,
+  documentType: string,
+  onUploadProgress: (progressEvent: any) => void
+) => {
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('type', type);
+  formData.append('type', documentType);
 
-  const { data } = await api.post<Document>(`/students/${studentId}/documents`, formData);
-  return data;
-}
+  return api.post(`/students/${studentId}/documents`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress, // Passa o callback para o axios
+  });
+};
 
 export async function deleteDocument(studentId: string, docId: string): Promise<void> {
   await api.delete(`/students/${studentId}/documents/${docId}`);
@@ -22,11 +29,33 @@ export async function deleteDocument(studentId: string, docId: string): Promise<
 // FUNÇÃO CORRIGIDA E SEGURA PARA VISUALIZAR
 export async function viewDocument(studentId: string, docId: string): Promise<void> {
   const response = await api.get(`/students/${studentId}/documents/${docId}`, {
-    params: { disposition: 'inline' }, // Pede para o backend servir para visualização
+    params: { disposition: 'inline' },
     responseType: 'blob',
   });
+
+  const contentType = response.headers['content-type']; // ex: application/pdf
   const fileURL = URL.createObjectURL(response.data);
-  window.open(fileURL, '_blank');
+
+  if (contentType.includes("application/pdf") || contentType.startsWith("image/")) {
+    // Abre direto no navegador
+    window.open(fileURL, "_blank");
+  } else if (
+    contentType.includes("application/vnd.openxmlformats-officedocument") || // Word, Excel, PowerPoint novos
+    contentType.includes("application/msword") ||
+    contentType.includes("application/vnd.ms-excel") ||
+    contentType.includes("application/vnd.ms-powerpoint")
+  ) {
+    // Usa Google Docs Viewer
+    const blobUrl = URL.createObjectURL(response.data);
+    const googleViewer = `https://docs.google.com/viewer?url=${encodeURIComponent(blobUrl)}&embedded=true`;
+    window.open(googleViewer, "_blank");
+  } else {
+    // Caso não dê pra visualizar, baixa
+    const link = document.createElement("a");
+    link.href = fileURL;
+    link.download = "documento";
+    link.click();
+  }
 }
 
 // FUNÇÃO CORRIGIDA PARA BAIXAR

@@ -1,12 +1,11 @@
 // src/pages/AlunosPage.tsx
-import { LoaderCircle, AlertTriangle, Plus } from 'lucide-react';
+import { LoaderCircle, AlertTriangle } from 'lucide-react';
 import { useStudentsPage } from '../../hooks/useStudentPage';
 
 // Componentes da página
 import StudentPageHeader from '../../components/student/StudentPageHeader';
-import StudentCards from '../../components/student/StudentListCard'; // 1. Corrigido: Importando o componente correto.
+import StudentList from '../../components/student/StudentList';
 import StudentForm from '../../components/student/StudentForm';
-import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
 
 type Status = 'ALL' | 'ATIVO' | 'INATIVO';
@@ -56,34 +55,23 @@ export default function AlunosPage() {
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto">
+        {/* Cabeçalho com busca, filtro e botão */}
         <StudentPageHeader
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           statusFilter={statusFilter}
           onStatusChange={handleStatusChange}
+          onAddStudent={openCreateModal} // 🔹 passa função
         />
-        {/* 3. Corrigido: Usando o StudentCards e passando apenas a prop 'students'. */}
-        <StudentCards students={students} />
 
-        <div className="flex justify-end mb-6 mt-4">
-          <Button
-            onClick={openCreateModal}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg bg-ifpr-green text-white shadow hover:bg-green-700 transition"
-          >
-            <Plus className="h-5 w-5" /> Adicionar Estudante
-          </Button>
-        </div>
+        {/* Listagem */}
+        <StudentList students={students} />
       </div>
 
       {/* Modal de criação */}
       <Modal isOpen={isCreateModalOpen} onClose={closeCreateModal}>
         <StudentForm onClose={closeCreateModal} />
       </Modal>
-
-      {/* 4. Removido: Os modais de Edição e Documentos foram removidos desta página.
-        Suas ações (editar, deletar, gerenciar documentos) agora devem ser 
-        iniciadas a partir da página de perfil do aluno (StudentProfilePage).
-      */}
     </div>
   );
 }

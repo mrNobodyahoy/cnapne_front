@@ -2,6 +2,8 @@ import type { FieldErrors, UseFormRegister, Control } from 'react-hook-form';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
 import type { UpdateFormData } from './ProfessionalEditForm';
+import { Controller } from 'react-hook-form'; 
+import ToggleSwitch from '../ui/ToggleSwitch'; 
 
 type Props = {
   register: UseFormRegister<UpdateFormData>;
@@ -17,13 +19,12 @@ const specialtyOptions = [
 ];
 
 const roleOptions = [
-  { value: 'coordenador', label: 'Coordenador' },
-  { value: 'professor', label: 'Professor' },
-  { value: 'tecnico', label: 'Técnico' },
-  { value: 'outros', label: 'Outros' },
+  { value: 'COORDENACAO_CNAPNE', label: 'Coordenação CNAPNE' },
+  { value: 'EQUIPE_ACOMPANHAMENTO', label: 'Equipe Acompanhamento' },
+  { value: 'EQUIPE_AEE', label: 'Equipe Atendimento' },
 ];
 
-export default function ProfessionalEditFormFields({ register, errors }: Props) {
+export default function ProfessionalEditFormFields({ register, errors, control }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
       <Input
@@ -61,19 +62,23 @@ export default function ProfessionalEditFormFields({ register, errors }: Props) 
         options={roleOptions}
         placeholder="Selecione a função"
       />
-
-      <div className="flex items-center gap-2 col-span-2">
-        <input
-          type="checkbox"
-          id="active"
-          {...register("active")}
-          className="h-4 w-4 text-ifpr-green border-gray-300 rounded"
-        />
-        <label htmlFor="active" className="text-sm text-gray-700">
-          Ativo
+      <div className="flex flex-col col-span-2">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Status do Profissional
         </label>
+        <Controller
+          name="active"
+          control={control}
+          render={({ field }) => (
+            <ToggleSwitch
+              id="active"
+              checked={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
         {errors.active && (
-          <p className="text-red-500 text-xs">{errors.active.message}</p>
+          <p className="text-red-500 text-xs mt-1">{errors.active.message}</p>
         )}
       </div>
     </div>

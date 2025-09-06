@@ -1,7 +1,7 @@
 // src/hooks/useStudentsPage.ts
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { getAllStudents, deleteStudent, searchStudents, getStudentsByStatus } from '../services/studentService';
+import { getAllStudents, deleteStudent, getStudentsByStatus } from '../services/studentService';
 import type { Student, StudentSummary } from '../types/student';
 
 export function useStudentsPage() {
@@ -19,36 +19,34 @@ export function useStudentsPage() {
   const { data: students, isLoading, isError, error } = useQuery<StudentSummary[], Error>({
     queryKey: ['students', q, statusFilter],
     queryFn: async () => {
-      if (statusFilter !== 'ALL') {
-        const students = await getStudentsByStatus(statusFilter);
-        if (searchTerm.trim()) {
-          const q = searchTerm.toLowerCase();
-          return students.filter(s =>
-            s.completeName.toLowerCase().startsWith(q) ||
-            s.registration.toLowerCase().startsWith(q)
-          );
-        }
-        return students;
+      let baseStudentList: StudentSummary[];
+
+      // 1. Primeiro, sempre buscamos a lista base de acordo com o filtro de status
+      if (statusFilter === 'ATIVO' || statusFilter === 'INATIVO') {
+        baseStudentList = await getStudentsByStatus(statusFilter);
+      } else {
+        // Para "Todos", usamos a chamada confiável `getAllStudents`
+        const fullStudents = await getAllStudents();
+        baseStudentList = fullStudents.map(student => ({
+          id: student.id,
+          completeName: student.completeName,
+          registration: student.registration,
+          team: student.team,
+          status: student.status,
+        }));
       }
 
+      // 2. Se houver um termo de busca, aplicamos o filtro na lista que acabamos de buscar
       if (searchTerm.trim()) {
-        const q = searchTerm.toLowerCase();
-        const students = await searchStudents(searchTerm); // se esse já vem do backend, pode estar usando includes
-        return students.filter(s =>
-          s.completeName.toLowerCase().startsWith(q) ||
-          s.registration.toLowerCase().startsWith(q)
+        const lowercasedQuery = searchTerm.toLowerCase();
+        return baseStudentList.filter(s =>
+          s.completeName.toLowerCase().startsWith(lowercasedQuery) ||
+          s.registration.toLowerCase().startsWith(lowercasedQuery)
         );
       }
 
-      const fullStudents = await getAllStudents();
-      return fullStudents.map(student => ({
-        id: student.id,
-        completeName: student.completeName,
-        registration: student.registration,
-        team: student.team,
-        status: student.status,
-      }));
-
+      // 3. Se não houver busca, apenas retornamos a lista base
+      return baseStudentList;
     },
     placeholderData: keepPreviousData,
     staleTime: 30_000,

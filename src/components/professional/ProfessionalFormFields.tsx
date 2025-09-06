@@ -18,8 +18,8 @@ const specialtyOptions = [
 
 const roleOptions = [
   { value: 'COORDENACAO_CNAPNE', label: 'Coordenação CNAPNE' },
-  { value: 'EQUIPE_MULTIDISCIPLINAR', label: 'Equipe Multidisciplinar' },
-  { value: 'EQUIPE_AEE', label: 'Equipe AEE' },
+  { value: 'EQUIPE_ACOMPANHAMENTO', label: 'Equipe Acompanhamento' },
+  { value: 'EQUIPE_AEE', label: 'Equipe Atendimento' },
 ];
 
 export default function ProfessionalFormFields({ register, errors }: Props) {
