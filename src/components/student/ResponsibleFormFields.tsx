@@ -39,14 +39,14 @@ export default function ResponsibleFormFields({ register, errors, fields, append
               {...register(`responsibles.${index}.completeName`)}
               error={errors.responsibles?.[index]?.completeName?.message}
             />
-             <Input
+            <Input
               id={`responsibles.${index}.email`}
               label={`E-mail do Responsável ${index + 1}`}
               type="email"
               {...register(`responsibles.${index}.email`)}
               error={errors.responsibles?.[index]?.email?.message}
             />
-            
+
             {/* <<< MUDANÇA AQUI: Substituído o Input simples pelo Controller */}
             <Controller
               name={`responsibles.${index}.phone`}
@@ -63,7 +63,7 @@ export default function ResponsibleFormFields({ register, errors, fields, append
                 />
               )}
             />
-            
+
             <Input
               id={`responsibles.${index}.kinship`}
               label={`Parentesco do Responsável ${index + 1}`}
@@ -73,7 +73,7 @@ export default function ResponsibleFormFields({ register, errors, fields, append
           </div>
         </div>
       ))}
-      
+
       <Button
         type="button"
         onClick={() => append({ completeName: '', email: '', phone: '', kinship: '' })}

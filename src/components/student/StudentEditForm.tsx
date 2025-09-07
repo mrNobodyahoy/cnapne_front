@@ -4,11 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import Button from '../ui/Button';
+import FormContainer from '../ui/FormContainer';
 import { updateStudent } from '../../services/studentService';
 import type { UpdateStudentDTO, Student } from '../../types/student';
 
-import StudentEditFields from './StudentEditFields';
+import StudentFields from './StudentFields';
 
 // Schema de validação
 const updateStudentSchema = z.object({
@@ -84,17 +84,13 @@ export default function StudentEditForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <StudentEditFields register={register} control={control} errors={errors} />
-
-      <div className="flex justify-end gap-4 pt-4 mt-6 border-t">
-        <Button type="button" onClick={onClose} variant="secondary">
-          Cancelar
-        </Button>
-        <Button type="submit" loading={isSubmitting || updateMutation.isPending}>
-          Salvar Alterações
-        </Button>
-      </div>
-    </form>
+    <FormContainer
+      title="Editar Estudante"
+      onSubmit={handleSubmit(onSubmit)}
+      onClose={onClose}
+      isLoading={isSubmitting || updateMutation.isPending}
+    >
+      <StudentFields register={register} control={control} errors={errors} variant="edit" />
+    </FormContainer>
   );
 }

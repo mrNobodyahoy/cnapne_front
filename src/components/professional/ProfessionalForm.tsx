@@ -52,11 +52,8 @@
         onSubmit={handleSubmit(onSubmit)} 
         className="space-y-6 bg-white p-6 rounded-2xl shadow-md"
         >
-        <h2 className="text-2xl font-bold text-ifpr-black">
-            Criar Profissional
-        </h2>
         
-        <ProfessionalFormFields register={register} control={control} errors={errors} />
+        <ProfessionalFormFields register={register} control={control} errors={errors}   variant="create" />
 
         <div className="flex justify-end gap-4 pt-4 border-t">
             <Button 

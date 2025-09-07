@@ -2,27 +2,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+// Imports da refatoração
+import { useMinorLogic } from '../../hooks/useMinorLogic';
+import FormContainer from '../ui/FormContainer';
 
 import type { CreateStudentDTO } from '../../types/student';
 import { createStudent } from '../../services/studentService';
 
-import StudentFormFields from './StudentFormFields';
+import StudentFields from './StudentFields';
 import ResponsibleFormFields from './ResponsibleFormFields';
-import Button from '../ui/Button'; // Assumindo que este é o caminho para seu botão
+import { calculateAge } from '../../lib/utils';
 
-// Função para calcular a idade
-const calculateAge = (birthDate: string | Date): number => {
-  if (!birthDate) return 0;
-  const today = new Date();
-  const birth = new Date(birthDate);
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-    age--;
-  }
-  return age;
-};
 
 // Schema para um responsável
 const responsibleSchema = z.object({
@@ -47,7 +39,7 @@ const createStudentSchema = z.object({
   ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
   responsibles: z.array(responsibleSchema).optional(),
 }).refine(data => {
-  if (!data.birthDate) return true; // Não valida se a data ainda não foi preenchida
+  if (!data.birthDate) return true; 
   const age = calculateAge(data.birthDate);
   if (age < 18) {
     return data.responsibles && data.responsibles.length > 0;
@@ -58,12 +50,12 @@ const createStudentSchema = z.object({
   path: ['responsibles'],
 });
 
+
 export type CreateFormData = z.infer<typeof createStudentSchema>;
 
 export default function StudentForm({ onClose }: { onClose: () => void }) {
   const queryClient = useQueryClient();
-  const [isMinor, setIsMinor] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null); // Estado para erro da API
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -85,7 +77,12 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
     name: "responsibles",
   });
 
-  // Lógica de mutação para criar o estudante
+  // ✅ Toda a lógica de useEffect e useState foi movida para o hook
+  const { isMinor } = useMinorLogic({
+    watch,
+    fieldArray: { fields, append, replace },
+  });
+
   const createMutation = useMutation({
     mutationFn: (newStudent: CreateStudentDTO) => createStudent(newStudent),
     onSuccess: () => {
@@ -94,34 +91,15 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
       onClose();
     },
     onError: (err: any) => {
-      // Define a mensagem de erro para ser exibida no formulário
       setApiError(err.response?.data?.message || 'Ocorreu um erro. Tente novamente.');
     },
   });
 
-  const birthDate = watch('birthDate');
-
-  useEffect(() => {
-    if (!birthDate) {
-      setIsMinor(false);
-      return;
-    };
-
-    const age = calculateAge(birthDate);
-    const isNowMinor = age < 18;
-    setIsMinor(isNowMinor);
-
-    if (isNowMinor && fields.length === 0) {
-      append({ completeName: '', email: '', phone: '', kinship: '' });
-    } else if (!isNowMinor && fields.length > 0) {
-      replace([]);
-    }
-  }, [birthDate, fields.length, append, replace]);
-
   const onSubmit = (data: CreateFormData) => {
-    setApiError(null); // Limpa erros anteriores
+    setApiError(null);
     const payload: CreateStudentDTO = { ...data };
 
+    // A lógica de remover 'responsibles' continua aqui, pois é parte da submissão
     if (!isMinor) {
       delete (payload as any).responsibles;
     }
@@ -130,16 +108,18 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <form
+    // ✅ O layout do formulário agora é controlado pelo FormContainer
+    <FormContainer
+      title="Criar Estudante"
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-white p-6 rounded-2xl shadow-md max-h-[90vh] overflow-y-auto"
+      onClose={onClose}
+      isLoading={isSubmitting || createMutation.isPending}
+      apiError={apiError}
     >
-      <h2 className="text-2xl font-bold text-ifpr-black">
-        Criar Estudante
-      </h2>
-
-      <StudentFormFields register={register} control={control} errors={errors} />
-
+      {/* ✅ Corrigido para "create" e usando o componente de campos unificado */}
+      <StudentFields register={register} control={control} errors={errors} variant="create" />
+      
+      {/* A lógica condicional de UI permanece no componente */}
       {isMinor && (
         <div className="pt-6 border-t mt-6">
           <ResponsibleFormFields
@@ -155,27 +135,6 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
           )}
         </div>
       )}
-
-      {/* Exibição do erro da API */}
-      {apiError && (
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
-          <strong>Erro:</strong> {apiError}
-        </div>
-      )}
-
-      <div className="flex justify-end gap-4 pt-4 border-t">
-        <Button
-          type="button"
-          onClick={onClose}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800"
-          disabled={createMutation.isPending}
-        >
-          Cancelar
-        </Button>
-        <Button type="submit" loading={isSubmitting || createMutation.isPending}>
-          Salvar
-        </Button>
-      </div>
-    </form>
+    </FormContainer>
   );
 }

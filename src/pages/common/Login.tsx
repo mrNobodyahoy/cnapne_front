@@ -9,6 +9,7 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import AuthCard from "../../components/auth/AuthCard";
 import logoIfpr from '../../assets/if-vertical.png';
+import { toast } from 'react-hot-toast'; // Importe o toast
 
 // Ícones
 import { Globe, Phone } from "lucide-react";
@@ -24,7 +25,6 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -35,9 +35,9 @@ export default function Login() {
     try {
       const sessionData = await loginRequest(data);
       setSession(sessionData);
+      toast.success('Login realizado com sucesso!'); // Toast de sucesso
 
       const userRole: Role = sessionData.role;
-
       if (userRole === 'ESTUDANTE') {
         navigate("/dashboard");
       } else {
@@ -45,15 +45,26 @@ export default function Login() {
       }
 
     } catch (err: any) {
+      // Para depurar, você pode ver o que o back-end está realmente enviando
+      console.log('Erro recebido do back-end:', err.response);
+
       const status = err?.response?.status;
-      const message =
-        status === 400 || status === 403
-          ? "Credenciais inválidas."
-          : "Erro ao autenticar. Tente novamente.";
-      setError("password", { message });
+      const errorMessage = err?.response?.data?.message;
+
+      let finalMessage: string;
+
+      if (status === 403 && errorMessage?.includes("menores de 18 anos")) {
+        finalMessage = errorMessage;
+      } else if (status === 400 || status === 403) {
+        finalMessage = "Credenciais inválidas.";
+      } else {
+        finalMessage = "Erro no servidor. Tente novamente mais tarde.";
+      }
+
+      // ✅ Substituímos setError por toast.error
+      toast.error(finalMessage);
     }
   };
-  
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 p-4">
       <div className="absolute top-8 left-8">

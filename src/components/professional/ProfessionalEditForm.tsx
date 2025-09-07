@@ -1,10 +1,13 @@
+// src/components/professional/ProfessionalEditForm.tsx
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import Button from '../ui/Button';
 import { updateProfessional } from '../../services/professionalService';
 import type { UpdateProfessionalDTO, ReadProfessionalDTO } from '../../types/professional';
-import ProfessionalEditFormFields from './ProfessionalEditFields';
+import ProfessionalFormFields from './ProfessionalFormFields';
+import { toast } from 'react-toastify';
 
 const updateProfessionalSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
@@ -16,13 +19,15 @@ const updateProfessionalSchema = z.object({
 
 export type UpdateFormData = z.infer<typeof updateProfessionalSchema>;
 
+interface ProfessionalEditFormProps {
+  onClose: () => void;
+  professional: ReadProfessionalDTO;
+}
+
 export default function ProfessionalEditForm({
   onClose,
   professional
-}: {
-  onClose: () => void;
-  professional: ReadProfessionalDTO
-}) {
+}: ProfessionalEditFormProps) {
   const queryClient = useQueryClient();
 
   const {
@@ -38,33 +43,30 @@ export default function ProfessionalEditForm({
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedProfessional: UpdateProfessionalDTO) =>
-      updateProfessional(professional.id, updatedProfessional),
+    mutationFn: (updatedData: UpdateProfessionalDTO) =>
+      updateProfessional(professional.id, updatedData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['professionals'] });
       onClose();
     },
     onError: (err: any) => {
       console.error('Erro ao atualizar profissional:', err);
+      toast("'Erro ao atualizar profissional");
     },
   });
 
   const onSubmit = (data: UpdateFormData) => {
-    console.log('Profissional selecionado para edição:', professional);
     updateMutation.mutate(data);
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-white p-6 rounded-2xl shadow-md"
-    >
-      <h2 className="text-2xl font-bold text-ifpr-black">
-        Editar Profissional
-      </h2>
+      className="space-y-6 bg-white p-6 rounded-2xl shadow-md">
 
-      <ProfessionalEditFormFields register={register} control={control} errors={errors} />
+      <ProfessionalFormFields register={register} control={control} errors={errors} variant="edit" />
 
+      {/* Botões de ação do formulário */}
       <div className="flex justify-end gap-4 pt-4 border-t">
         <Button
           type="button"

@@ -21,7 +21,6 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
   const ativos = professionals.filter((p) => p.active);
   const inativos = professionals.filter((p) => !p.active);
 
-  // Função para renderizar a lista com layout de tabela
   const renderList = (lista: ReadProfessionalDTO[]) => (
     <div className="rounded-lg border bg-white shadow-sm">
       {/* Cabeçalho da Tabela */}
