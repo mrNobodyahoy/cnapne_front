@@ -4,7 +4,7 @@ import { LoaderCircle, ArrowLeft, Edit, Trash } from 'lucide-react';
 import { useStudentProfilePage } from '../../hooks/useStudentProfilePage';
 
 // Componentes
-import ResponsibleList from '../../components/student/ResponsibleList';
+import ResponsibleList from '../../components/student/responsible/ResponsibleList';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
 import StudentEditForm from '../../components/student/StudentEditForm';

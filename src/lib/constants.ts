@@ -18,3 +18,4 @@ export const ethnicityOptions = [
   { value: 'INDIGENA', label: 'Indígena' },
   { value: 'PREFIRO_NAO_INFORMAR', label: 'Prefiro não informar' },
 ];
+

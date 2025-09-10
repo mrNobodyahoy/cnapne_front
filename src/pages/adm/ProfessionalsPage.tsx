@@ -1,32 +1,31 @@
-import { AlertTriangle, LoaderCircle, Plus } from 'lucide-react';
+import { AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useProfessionalsPage } from '../../hooks/useProfessionalsPage';
 
-import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
 import ProfessionalList from '../../components/professional/ProfessionalList';
 import ProfessionalForm from '../../components/professional/ProfessionalForm';
 import ProfessionalEditForm from '../../components/professional/ProfessionalEditForm';
+import ProfessionalPageHeader from '../../components/professional/ProfessionalPageHeader';
 
 export default function ProfissionaisPage() {
-  // O componente agora consome o hook, recebendo todo o estado e lógica prontos
   const {
     professionals,
-    isLoading,
+    isLoading, // Para o carregamento inicial
+    isFetching, // Para as atualizações
     isError,
     error,
     deleteMutation,
     modalState,
-    handleOpenCreateModal,
-    handleOpenEditModal,
-    handleCloseModal,
-    handleDeleteProfessional,
+    filters,
+    handlers,
   } = useProfessionalsPage();
 
+  // Usa 'isLoading' para o carregamento de tela cheia, que acontece só na primeira vez.
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />
-        <p className="ml-2 text-gray-600">Carregando profissionais...</p>
+        <p className="ml-2 text-gray-600">Carregando...</p>
       </div>
     );
   }
@@ -45,31 +44,36 @@ export default function ProfissionaisPage() {
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-ifpr-black">Lista de Profissionais</h1>
-            <p className="mt-1 text-gray-600">Gerencie os profissionais cadastrados no sistema.</p>
-          </div>
-          <Button onClick={handleOpenCreateModal} className="flex items-center gap-2">
-            <Plus className="h-5 w-5" />
-            Adicionar Profissional
-          </Button>
-        </div>
-
-        <ProfessionalList
-          professionals={professionals}
-          onEdit={handleOpenEditModal}
-          onDelete={handleDeleteProfessional}
-          deleteMutation={deleteMutation}
+        <ProfessionalPageHeader
+          isFetching={isFetching}
+          searchTerm={filters.searchInput} // ✅ pega o searchInput
+          onSearchChange={handlers.handleSearchChange}
+          roleFilter={filters.roleFilter}
+          onRoleChange={handlers.handleRoleChange}
+          statusFilter={filters.statusFilter}
+          onStatusChange={handlers.handleStatusChange}
+          onAddProfessional={handlers.handleOpenCreateModal}
         />
+
+        {/* ✅ A lista fica com opacidade reduzida enquanto novos dados são buscados */}
+        <div className={`transition-opacity duration-200 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
+          <ProfessionalList
+            professionals={professionals}
+            onEdit={handlers.handleOpenEditModal}
+            onDelete={handlers.handleDeleteProfessional}
+            deleteMutation={deleteMutation}
+          />
+        </div>
       </div>
 
-      {/* Usando o componente Modal genérico */}
-      <Modal isOpen={modalState.mode !== 'closed'} onClose={handleCloseModal}>
+      <Modal
+        isOpen={modalState.mode !== 'closed'}
+        onClose={handlers.handleCloseModal}
         title={modalState.mode === 'create' ? 'Criar Novo Profissional' : 'Editar Profissional'}
-        {modalState.mode === 'create' && <ProfessionalForm onClose={handleCloseModal} />}
+      >
+        {modalState.mode === 'create' && <ProfessionalForm onClose={handlers.handleCloseModal} />}
         {modalState.mode === 'edit' && modalState.data && (
-          <ProfessionalEditForm onClose={handleCloseModal} professional={modalState.data} />
+          <ProfessionalEditForm onClose={handlers.handleCloseModal} professional={modalState.data} />
         )}
       </Modal>
     </div>

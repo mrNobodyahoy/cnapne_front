@@ -45,8 +45,6 @@ export default function Login() {
       }
 
     } catch (err: any) {
-      // Para depurar, você pode ver o que o back-end está realmente enviando
-      console.log('Erro recebido do back-end:', err.response);
 
       const status = err?.response?.status;
       const errorMessage = err?.response?.data?.message;

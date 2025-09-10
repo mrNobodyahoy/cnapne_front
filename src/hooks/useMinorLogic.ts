@@ -29,8 +29,6 @@ export function useMinorLogic<TFieldValues extends FieldValues>({
         setIsMinor(isNowMinor);
 
         if (isNowMinor && fields.length === 0) {
-            // 3. Adicionamos 'as any' para compatibilidade com o tipo genérico
-            // O hook não sabe a forma exata, mas o formulário que o usa, sim.
             append({ completeName: '', email: '', phone: '', kinship: '' } as any);
         } else if (!isNowMinor) {
             replace([]);

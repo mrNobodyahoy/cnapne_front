@@ -12,7 +12,7 @@ import type { CreateStudentDTO } from '../../types/student';
 import { createStudent } from '../../services/studentService';
 
 import StudentFields from './StudentFields';
-import ResponsibleFormFields from './ResponsibleFormFields';
+import ResponsibleFormFields from './responsible/ResponsibleFormFields';
 import { calculateAge } from '../../lib/utils';
 
 

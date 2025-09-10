@@ -1,28 +1,29 @@
-// src/components/professional/ProfessionalList.tsx
 import type { ReadProfessionalDTO } from '../../types/professional';
 import { Edit, Trash, LoaderCircle } from 'lucide-react';
+import type { UseMutationResult } from '@tanstack/react-query';
 
 interface ProfessionalListProps {
   professionals: ReadProfessionalDTO[] | undefined;
   onEdit: (professional: ReadProfessionalDTO) => void;
   onDelete: (id: string, name: string) => void;
-  deleteMutation: any;
+  // É uma boa prática tipar a mutação de forma mais específica
+  deleteMutation: UseMutationResult<void, Error, string, unknown>;
 }
 
 export default function ProfessionalList({ professionals, onEdit, onDelete, deleteMutation }: ProfessionalListProps) {
+  // Se a lista (já filtrada) estiver vazia, mostre a mensagem.
   if (!professionals || professionals.length === 0) {
     return (
       <div className="rounded-lg border bg-white shadow-sm p-6 text-center text-gray-500 mt-6">
-        Nenhum profissional encontrado.
+        Nenhum profissional encontrado com os filtros selecionados.
       </div>
     );
   }
 
-  const ativos = professionals.filter((p) => p.active);
-  const inativos = professionals.filter((p) => !p.active);
-
-  const renderList = (lista: ReadProfessionalDTO[]) => (
-    <div className="rounded-lg border bg-white shadow-sm">
+  // Não há mais separação entre ativos e inativos aqui.
+  // A lista é renderizada em uma única tabela.
+  return (
+    <div className="rounded-lg border bg-white shadow-sm mt-6">
       {/* Cabeçalho da Tabela */}
       <div className="grid grid-cols-12 gap-4 p-4 font-semibold text-sm text-gray-600 border-b bg-gray-50 uppercase tracking-wider">
         <div className="col-span-3">Nome</div>
@@ -35,7 +36,7 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
 
       {/* Corpo da Tabela */}
       <ul className="divide-y divide-gray-200">
-        {lista.map((professional) => (
+        {professionals.map((professional) => (
           <li key={professional.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors text-sm">
             {/* Coluna 1: Nome */}
             <div className="col-span-3 font-medium text-gray-900 truncate" title={professional.fullName}>
@@ -55,10 +56,9 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
             </div>
             {/* Coluna 5: Status */}
             <div className="col-span-1 flex justify-center">
-              <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                  professional.active
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+              <span className={`text-xs font-semibold px-3 py-1 rounded-full ${professional.active
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
                 }`}>
                 {professional.active ? 'ATIVO' : 'INATIVO'}
               </span>
@@ -74,7 +74,7 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
               </button>
               <button
                 onClick={() => onDelete(professional.id, professional.fullName)}
-                className="p-2 rounded-full text-red-500 hover:bg-red-50 hover:hover:text-red-700 transition"
+                className="p-2 rounded-full text-red-500 hover:bg-red-50 hover:text-red-700 transition"
                 title="Deletar Profissional"
                 disabled={deleteMutation.isPending && deleteMutation.variables === professional.id}
               >
@@ -88,23 +88,6 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
           </li>
         ))}
       </ul>
-    </div>
-  );
-
-  return (
-    <div className="space-y-8 mt-6">
-      {ativos.length > 0 && (
-        <div>
-          <h2 className="text-lg font-bold text-gray-800 mb-3">Profissionais Ativos</h2>
-          {renderList(ativos)}
-        </div>
-      )}
-      {inativos.length > 0 && (
-        <div>
-          <h2 className="text-lg font-bold text-gray-800 mb-3">Profissionais Inativos</h2>
-          {renderList(inativos)}
-        </div>
-      )}
     </div>
   );
 }

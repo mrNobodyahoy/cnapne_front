@@ -1,5 +1,5 @@
 // src/components/student/ResponsibleList.tsx
-import type { ResponsibleDTO } from '../../types/student';
+import type { ResponsibleDTO } from '../../../types/student';
 import { UserSquare } from 'lucide-react';
 
 interface ResponsibleListProps {

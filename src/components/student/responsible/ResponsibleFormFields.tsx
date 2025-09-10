@@ -1,10 +1,10 @@
 import { Controller, type Control, type FieldErrors, type UseFormRegister, type UseFieldArrayAppend, type UseFieldArrayRemove, type FieldArrayWithId } from 'react-hook-form';
 import { Trash, Plus } from 'lucide-react';
 
-import type { CreateFormData } from './StudentForm';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
-import { formatPhone } from '../../lib/formatters';
+import type { CreateFormData } from '../StudentForm';
+import Input from '../../ui/Input';
+import Button from '../../ui/Button';
+import { formatPhone } from '../../../lib/formatters';
 
 type Props = {
   control: Control<CreateFormData>;
