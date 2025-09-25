@@ -19,9 +19,8 @@ export default function App() {
       <Toaster
         position="top-right"
         toastOptions={{
-          // Estilo padrão para todos os toasts
           className: '',
-          duration: 5000, // Duração de 5 segundos
+          duration: 5000,
           style: {
             background: '#333',
             color: '#fff',

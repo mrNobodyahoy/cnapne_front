@@ -4,7 +4,7 @@ import Select from '../ui/Select';
 import { roleOptions } from './ProfessionalOptions';
 
 interface Props {
-    isFetching: boolean; // ✅ Nova prop para indicar carregamento de filtros
+    isFetching: boolean;
     searchTerm: string;
     onSearchChange: (value: string) => void;
     roleFilter: string;
@@ -37,7 +37,7 @@ export default function ProfessionalPageHeader({
                     <input
                         type="text"
                         placeholder="Buscar por nome"
-                        value={searchTerm} // ✅ agora é o searchInput
+                        value={searchTerm}
                         onChange={(e) => onSearchChange(e.target.value)}
                         className="pl-10 pr-3 py-2 border rounded-lg shadow-sm w-full sm:w-auto focus:ring-ifpr-green focus:border-ifpr-green"
                     />

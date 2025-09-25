@@ -1,11 +1,9 @@
 import type { ButtonHTMLAttributes } from "react";
 
-// Defina o tipo 'ButtonVariants' primeiro, separadamente
 type ButtonVariants = 'primary' | 'secondary' | 'danger' | 'outline' | 'info';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
-  // Use o tipo definido para a propriedade 'variant'
   variant?: ButtonVariants;
 };
 
@@ -13,7 +11,8 @@ export default function Button({
   loading,
   children,
   className = "",
-  variant = 'primary', 
+  variant = 'primary',
+  type = "button",
   ...rest
 }: Props) {
   const baseStyles = `
@@ -33,6 +32,7 @@ export default function Button({
 
   return (
     <button
+      type={type}
       disabled={loading || rest.disabled}
       className={`${baseStyles} ${variantStyles[variant]} ${className}`}
       {...rest}

@@ -1,8 +1,10 @@
-import api from '../lib/http';
-import { type Document } from '../types/document';
+import api from "../lib/http";
+import { type Document } from "../types/document";
 
 export async function getDocuments(studentId: string): Promise<Document[]> {
-  const { data } = await api.get<Document[]>(`/students/${studentId}/documents`);
+  const { data } = await api.get<Document[]>(
+    `/students/${studentId}/documents`
+  );
   return data;
 }
 
@@ -13,44 +15,51 @@ export const uploadDocument = (
   onUploadProgress: (progressEvent: any) => void
 ) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('type', documentType);
+  formData.append("file", file);
+  formData.append("type", documentType);
 
   return api.post(`/students/${studentId}/documents`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    onUploadProgress, // Passa o callback para o axios
+    headers: { "Content-Type": "multipart/form-data" },
+    onUploadProgress,
   });
 };
 
-export async function deleteDocument(studentId: string, docId: string): Promise<void> {
+export async function deleteDocument(
+  studentId: string,
+  docId: string
+): Promise<void> {
   await api.delete(`/students/${studentId}/documents/${docId}`);
 }
 
-// FUNÇÃO CORRIGIDA E SEGURA PARA VISUALIZAR
-export async function viewDocument(studentId: string, docId: string): Promise<void> {
+export async function viewDocument(
+  studentId: string,
+  docId: string
+): Promise<void> {
   const response = await api.get(`/students/${studentId}/documents/${docId}`, {
-    params: { disposition: 'inline' },
-    responseType: 'blob',
+    params: { disposition: "inline" },
+    responseType: "blob",
   });
 
-  const contentType = response.headers['content-type']; // ex: application/pdf
+  const contentType = response.headers["content-type"];
   const fileURL = URL.createObjectURL(response.data);
 
-  if (contentType.includes("application/pdf") || contentType.startsWith("image/")) {
-    // Abre direto no navegador
+  if (
+    contentType.includes("application/pdf") ||
+    contentType.startsWith("image/")
+  ) {
     window.open(fileURL, "_blank");
   } else if (
-    contentType.includes("application/vnd.openxmlformats-officedocument") || // Word, Excel, PowerPoint novos
+    contentType.includes("application/vnd.openxmlformats-officedocument") ||
     contentType.includes("application/msword") ||
     contentType.includes("application/vnd.ms-excel") ||
     contentType.includes("application/vnd.ms-powerpoint")
   ) {
-    // Usa Google Docs Viewer
     const blobUrl = URL.createObjectURL(response.data);
-    const googleViewer = `https://docs.google.com/viewer?url=${encodeURIComponent(blobUrl)}&embedded=true`;
+    const googleViewer = `https://docs.google.com/viewer?url=${encodeURIComponent(
+      blobUrl
+    )}&embedded=true`;
     window.open(googleViewer, "_blank");
   } else {
-    // Caso não dê pra visualizar, baixa
     const link = document.createElement("a");
     link.href = fileURL;
     link.download = "documento";
@@ -58,17 +67,20 @@ export async function viewDocument(studentId: string, docId: string): Promise<vo
   }
 }
 
-// FUNÇÃO CORRIGIDA PARA BAIXAR
-export async function downloadDocument(studentId: string, docId: string, fileName: string): Promise<void> {
+export async function downloadDocument(
+  studentId: string,
+  docId: string,
+  fileName: string
+): Promise<void> {
   const response = await api.get(`/students/${studentId}/documents/${docId}`, {
-    params: { disposition: 'attachment' }, // Pede para o backend servir para download
-    responseType: 'blob',
+    params: { disposition: "attachment" },
+    responseType: "blob",
   });
 
   const url = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
-  link.setAttribute('download', fileName);
+  link.setAttribute("download", fileName);
   document.body.appendChild(link);
   link.click();
   link.remove();

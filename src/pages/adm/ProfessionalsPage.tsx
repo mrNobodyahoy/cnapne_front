@@ -1,17 +1,21 @@
 import { AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useProfessionalsPage } from '../../hooks/useProfessionalsPage';
-
 import Modal from '../../components/ui/Modal';
+import Button from '../../components/ui/Button';
 import ProfessionalList from '../../components/professional/ProfessionalList';
 import ProfessionalForm from '../../components/professional/ProfessionalForm';
 import ProfessionalEditForm from '../../components/professional/ProfessionalEditForm';
 import ProfessionalPageHeader from '../../components/professional/ProfessionalPageHeader';
+import Pagination from '../../components/ui/Pagination';
 
 export default function ProfissionaisPage() {
   const {
     professionals,
-    isLoading, // Para o carregamento inicial
-    isFetching, // Para as atualizações
+    pageData,
+    page,
+    setPage,
+    isLoading,
+    isFetching,
     isError,
     error,
     deleteMutation,
@@ -20,8 +24,20 @@ export default function ProfissionaisPage() {
     handlers,
   } = useProfessionalsPage();
 
-  // Usa 'isLoading' para o carregamento de tela cheia, que acontece só na primeira vez.
-  if (isLoading) {
+  const handleSearchChange = (value: string) => {
+    setPage(0);
+    handlers.setSearchInput(value);
+  };
+  const handleRoleChange = (value: string) => {
+    setPage(0);
+    handlers.setRoleFilter(value);
+  };
+  const handleStatusChange = (value: string) => {
+    setPage(0);
+    handlers.setStatusFilter(value);
+  };
+
+  if (isLoading && !pageData) { // Mostra o loading inicial
     return (
       <div className="flex items-center justify-center p-8">
         <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />
@@ -46,16 +62,15 @@ export default function ProfissionaisPage() {
       <div className="max-w-7xl mx-auto">
         <ProfessionalPageHeader
           isFetching={isFetching}
-          searchTerm={filters.searchInput} // ✅ pega o searchInput
-          onSearchChange={handlers.handleSearchChange}
+          searchTerm={filters.searchInput}
+          onSearchChange={handleSearchChange}
           roleFilter={filters.roleFilter}
-          onRoleChange={handlers.handleRoleChange}
+          onRoleChange={handleRoleChange}
           statusFilter={filters.statusFilter}
-          onStatusChange={handlers.handleStatusChange}
+          onStatusChange={handleStatusChange}
           onAddProfessional={handlers.handleOpenCreateModal}
         />
 
-        {/* ✅ A lista fica com opacidade reduzida enquanto novos dados são buscados */}
         <div className={`transition-opacity duration-200 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
           <ProfessionalList
             professionals={professionals}
@@ -64,6 +79,13 @@ export default function ProfissionaisPage() {
             deleteMutation={deleteMutation}
           />
         </div>
+
+        <Pagination
+          currentPage={page}
+          totalPages={pageData?.totalPages ?? 0}
+          onPageChange={setPage}
+          isFetching={isFetching}
+        />
       </div>
 
       <Modal

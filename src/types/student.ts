@@ -34,13 +34,14 @@ export interface UpdateStudentDTO {
   phone: string;
   gender: string;
   ethnicity: string;
+  status: string;
 }
 
 export interface ResponsibleDTO {
   completeName: string;
   email: string;
   phone: string;
-  kinship: string; 
+  kinship: string;
 }
 
 export interface StudentSummary {
@@ -49,4 +50,22 @@ export interface StudentSummary {
   registration: string;
   team: string;
   status: string;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+export interface GetStudentsParams {
+  page?: number;
+  size?: number;
+  query?: string;
+  status?: "ALL" | "ATIVO" | "INATIVO";
 }

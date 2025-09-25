@@ -10,7 +10,6 @@ import type { UpdateStudentDTO, Student } from '../../types/student';
 
 import StudentFields from './StudentFields';
 
-// Schema de validação
 const updateStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
   completeName: z.string().min(1, 'Nome completo é obrigatório.'),
@@ -22,7 +21,6 @@ const updateStudentSchema = z.object({
   phone: z.string().min(1, 'Telefone é obrigatório.'),
   gender: z.string().min(1, 'Gênero é obrigatório.'),
   ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
-  // MUDANÇA AQUI: Ajustado para os valores em português
   status: z.enum(["ATIVO", "INATIVO"], {
     required_error: "O status é obrigatório"
   }),
@@ -78,7 +76,7 @@ export default function StudentEditForm({
   const onSubmit = (data: UpdateFormData) => {
     const payload = {
       ...data,
-      phone: data.phone.replace(/[^0-9]/g, ''), // limpa formatação do telefone
+      phone: data.phone.replace(/[^0-9]/g, ''),
     };
     updateMutation.mutate(payload);
   };

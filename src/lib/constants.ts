@@ -1,21 +1,17 @@
-
-// Opções de gênero visando a inclusão
 export const genderOptions = [
-  { value: 'FEMININO', label: 'Feminino' },
-  { value: 'MASCULINO', label: 'Masculino' },
-  { value: 'NAO_BINARIO', label: 'Não-binário' },
-  { value: 'TRANSGENERO', label: 'Transgênero' },
-  { value: 'OUTRO', label: 'Outro' },
-  { value: 'PREFIRO_NAO_INFORMAR', label: 'Prefiro não informar' },
+  { value: "mulher_cis", label: "Mulher Cisgênera" },
+  { value: "homem_cis", label: "Homem Cisgênero" },
+  { value: "mulher_trans", label: "Mulher Transgênero" },
+  { value: "homem_trans", label: "Homem Transgênero" },
+  { value: "nao_binario", label: "Pessoa Não Binária" },
+  { value: "nao_informar", label: "Prefiro Não Informar" },
 ];
 
-// Opções de etnia baseadas no padrão IBGE, com opção de não informar
 export const ethnicityOptions = [
-  { value: 'BRANCA', label: 'Branca' },
-  { value: 'PARDA', label: 'Parda' },
-  { value: 'PRETA', label: 'Preta' },
-  { value: 'AMARELA', label: 'Amarela' },
-  { value: 'INDIGENA', label: 'Indígena' },
-  { value: 'PREFIRO_NAO_INFORMAR', label: 'Prefiro não informar' },
+  { value: "branca", label: "Branca" },
+  { value: "parda", label: "Parda" },
+  { value: "preta", label: "Preta" },
+  { value: "amarela", label: "Amarela" },
+  { value: "indigena", label: "Indígena" },
+  { value: "nao_informar", label: "Prefiro Não Informar" },
 ];
-

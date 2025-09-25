@@ -1,8 +1,10 @@
 import api from "../lib/http";
 import type { Session } from "../store/auth";
 
-// A resposta do login agora é a sessão completa
-export async function loginRequest(payload: { email: string; password: string }): Promise<Session> {
+export async function loginRequest(payload: {
+  email: string;
+  password: string;
+}): Promise<Session> {
   const { data } = await api.post<Session>("/auth/login", payload);
   return data;
 }

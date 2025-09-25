@@ -1,8 +1,7 @@
 // src/components/layout/Sidebar.tsx
 
 import { NavLink, useNavigate } from "react-router-dom";
-// 1. Importamos os ícones que estavam no StudentNavbar
-import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle } from "lucide-react";
+import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle, ClipboardList } from "lucide-react";
 import { logoutRequest } from "../../services/authService";
 import { useAuth, type Role } from "../../store/auth";
 import Button from "../ui/Button";
@@ -28,6 +27,9 @@ export default function Sidebar() {
       ...baseLinks,
       { to: "/alunos", label: "Alunos", icon: Users },
       { to: "/professionals", label: "Profissionais", icon: BookUser },
+      { to: "/atendimentos", label: "Atendimentos", icon: ClipboardList },
+      { to: "/acompanhamentos", label: "Acompanhamentos", icon: ClipboardList },
+
     ];
 
     switch (role) {
@@ -37,11 +39,10 @@ export default function Sidebar() {
           { to: "/admin/config", label: "Admin", icon: ShieldCheck },
         ];
 
-      case 'EQUIPE_MULTIDISCIPLINAR':
+      case 'EQUIPE_ACOMPANHAMENTO':
       case 'EQUIPE_AEE':
         return staffLinks;
 
-      // 2. Adicionamos os links corretos para o estudante aqui
       case 'ESTUDANTE':
         return [
           { to: "/dashboard", label: "Meu Painel", icon: LayoutDashboard },
@@ -60,7 +61,6 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 h-full w-64 border-r bg-white flex flex-col">
       <div className="p-6">
         <h1 className="text-2xl font-bold text-ifpr-green">CNAPNE</h1>
-        {/* 3. O subtítulo muda dependendo do tipo de usuário */}
         <p className="text-sm text-gray-500">
           {isStudent ? 'Painel do Estudante' : 'Painel de Controle'}
         </p>

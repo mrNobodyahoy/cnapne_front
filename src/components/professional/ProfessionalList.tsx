@@ -6,12 +6,10 @@ interface ProfessionalListProps {
   professionals: ReadProfessionalDTO[] | undefined;
   onEdit: (professional: ReadProfessionalDTO) => void;
   onDelete: (id: string, name: string) => void;
-  // É uma boa prática tipar a mutação de forma mais específica
   deleteMutation: UseMutationResult<void, Error, string, unknown>;
 }
 
 export default function ProfessionalList({ professionals, onEdit, onDelete, deleteMutation }: ProfessionalListProps) {
-  // Se a lista (já filtrada) estiver vazia, mostre a mensagem.
   if (!professionals || professionals.length === 0) {
     return (
       <div className="rounded-lg border bg-white shadow-sm p-6 text-center text-gray-500 mt-6">
@@ -20,11 +18,8 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
     );
   }
 
-  // Não há mais separação entre ativos e inativos aqui.
-  // A lista é renderizada em uma única tabela.
   return (
     <div className="rounded-lg border bg-white shadow-sm mt-6">
-      {/* Cabeçalho da Tabela */}
       <div className="grid grid-cols-12 gap-4 p-4 font-semibold text-sm text-gray-600 border-b bg-gray-50 uppercase tracking-wider">
         <div className="col-span-3">Nome</div>
         <div className="col-span-3">E-mail</div>
@@ -34,7 +29,6 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
         <div className="col-span-1 text-center">Ações</div>
       </div>
 
-      {/* Corpo da Tabela */}
       <ul className="divide-y divide-gray-200">
         {professionals.map((professional) => (
           <li key={professional.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors text-sm">
@@ -57,8 +51,8 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
             {/* Coluna 5: Status */}
             <div className="col-span-1 flex justify-center">
               <span className={`text-xs font-semibold px-3 py-1 rounded-full ${professional.active
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-red-100 text-red-700'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700'
                 }`}>
                 {professional.active ? 'ATIVO' : 'INATIVO'}
               </span>

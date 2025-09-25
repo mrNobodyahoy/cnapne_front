@@ -13,7 +13,6 @@ type Props<TFieldValues extends FieldValues> = {
     variant: 'create' | 'edit';
 };
 
-// Componente de campos unificado e genérico
 export default function StudentFields<TFieldValues extends FieldValues>({
     register,
     errors,
@@ -37,7 +36,6 @@ export default function StudentFields<TFieldValues extends FieldValues>({
                 error={errors.email?.message as string}
             />
 
-            {/* --- Campo Condicional: Senha (apenas na criação) --- */}
             {variant === 'create' && (
                 <Input
                     label="Senha"
@@ -102,7 +100,6 @@ export default function StudentFields<TFieldValues extends FieldValues>({
                 error={errors.ethnicity?.message as string}
             />
 
-            {/* --- Campo Condicional: Status (apenas na edição) --- */}
             {variant === 'edit' && (
                 <div className="space-y-1">
                     <label htmlFor="status" className="text-sm font-medium">Status do Aluno</label>

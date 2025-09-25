@@ -66,13 +66,8 @@ export default function ProfessionalEditForm({
 
       <ProfessionalFormFields register={register} control={control} errors={errors} variant="edit" />
 
-      {/* Botões de ação do formulário */}
       <div className="flex justify-end gap-4 pt-4 border-t">
-        <Button
-          type="button"
-          onClick={onClose}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800"
-        >
+        <Button type="button" onClick={onClose} className="bg-gray-300 hover:bg-gray-400 text-gray-800">
           Cancelar
         </Button>
         <Button type="submit" loading={isSubmitting || updateMutation.isPending}>

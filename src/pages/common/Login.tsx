@@ -9,9 +9,8 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import AuthCard from "../../components/auth/AuthCard";
 import logoIfpr from '../../assets/if-vertical.png';
-import { toast } from 'react-hot-toast'; // Importe o toast
+import { toast } from 'react-hot-toast';
 
-// Ícones
 import { Globe, Phone } from "lucide-react";
 
 const schema = z.object({
@@ -35,7 +34,7 @@ export default function Login() {
     try {
       const sessionData = await loginRequest(data);
       setSession(sessionData);
-      toast.success('Login realizado com sucesso!'); // Toast de sucesso
+      toast.success('Login realizado com sucesso!');
 
       const userRole: Role = sessionData.role;
       if (userRole === 'ESTUDANTE') {
@@ -59,7 +58,6 @@ export default function Login() {
         finalMessage = "Erro no servidor. Tente novamente mais tarde.";
       }
 
-      // ✅ Substituímos setError por toast.error
       toast.error(finalMessage);
     }
   };

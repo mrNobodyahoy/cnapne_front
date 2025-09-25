@@ -12,10 +12,8 @@ interface ModalProps {
 
 export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
   return (
-    // Transition lida com as animações de entrada e saída do modal
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        {/* Backdrop (fundo escuro) */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,9 +37,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              {/* O painel do modal (conteúdo principal) */}
               <Dialog.Panel className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                {/* Título do Modal */}
                 {title && (
                   <Dialog.Title
                     as="h3"
@@ -51,7 +47,6 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
                   </Dialog.Title>
                 )}
 
-                {/* Botão de Fechar */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition"
@@ -59,8 +54,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
                 >
                   <X className="h-6 w-6" />
                 </button>
-                
-                {/* Conteúdo do Modal (seu formulário, etc.) */}
+
                 <div className="mt-4">
                   {children}
                 </div>

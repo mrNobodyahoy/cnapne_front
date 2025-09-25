@@ -4,6 +4,7 @@ export const specialtyOptions = [
     { value: 'pedagogia', label: 'Pedagogia' },
     { value: 'psicologia', label: 'Psicologia' },
     { value: 'assistencia-social', label: 'Assistência Social' },
+    { value: 'professor', label: 'Professor' },
     { value: 'outros', label: 'Outros' },
 ];
 

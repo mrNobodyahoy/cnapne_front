@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { LoaderCircle, ArrowLeft, Edit, Trash } from 'lucide-react';
 import { useStudentProfilePage } from '../../hooks/useStudentProfilePage';
 
-// Componentes
 import ResponsibleList from '../../components/student/responsible/ResponsibleList';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
@@ -24,7 +23,6 @@ export default function StudentProfilePage() {
     isDeleting,
   } = useStudentProfilePage();
 
-  // LOADING
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -33,7 +31,6 @@ export default function StudentProfilePage() {
     );
   }
 
-  // ERROR
   if (isError) {
     return (
       <div className="rounded-md border border-red-300 bg-red-50 p-4 text-red-700">
@@ -44,7 +41,6 @@ export default function StudentProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* VOLTAR */}
       <Link
         to="/alunos"
         className="inline-flex items-center gap-2 text-ifpr-green hover:underline mb-6"
@@ -54,7 +50,6 @@ export default function StudentProfilePage() {
       </Link>
 
       <div className="bg-white p-8 rounded-xl shadow-md border space-y-6">
-        {/* CABEÇALHO COM AÇÕES */}
         <div className="flex justify-between items-start gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
@@ -85,7 +80,6 @@ export default function StudentProfilePage() {
 
         <div className="border-t" />
 
-        {/* DETALHES DO ESTUDANTE */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
           <div>
             <h3 className="font-semibold text-gray-500">Email</h3>
@@ -123,7 +117,6 @@ export default function StudentProfilePage() {
         <div className="border-t" />
         <StudentDocumentsList student={student!} />
 
-        {/* LISTA DE RESPONSÁVEIS */}
         {student?.responsibles && student.responsibles.length > 0 && (
           <>
             <div className="border-t" />
@@ -132,7 +125,6 @@ export default function StudentProfilePage() {
         )}
       </div>
 
-      {/* MODAL EDITAR */}
       <Modal isOpen={isEditModalOpen} onClose={closeEditModal} title="Editar Estudante">
         {student && (
           <StudentEditForm student={student} onClose={closeEditModal} />

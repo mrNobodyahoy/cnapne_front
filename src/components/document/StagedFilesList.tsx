@@ -21,43 +21,37 @@ export default function StagedFilesList({ files, onRemove, onUploadAll, isUpload
             {files.map(stagedFile => (
                 <div key={stagedFile.id} className="border rounded-lg p-3 flex items-center gap-4 bg-white">
                     <FileIcon fileName={stagedFile.file.name} />
-                    
-                    {/* ===== INÍCIO DA LÓGICA ADICIONADA ===== */}
+
                     <div className="flex-grow overflow-hidden">
                         <div className="flex justify-between items-center">
                             <p className="text-sm font-medium text-gray-800 truncate" title={stagedFile.file.name}>
                                 {stagedFile.file.name}
                             </p>
-                            {/* Mostra a porcentagem durante o upload */}
                             {stagedFile.progress > 0 && stagedFile.progress < 100 && (
                                 <p className="text-sm font-mono text-gray-600 flex-shrink-0 ml-2">{stagedFile.progress}%</p>
                             )}
                         </div>
 
-                        {/* Barra de Progresso ou Status */}
                         {stagedFile.progress === 0 && !stagedFile.error && (
-                             <p className="text-xs text-gray-500 mt-1">Aguardando envio...</p>
+                            <p className="text-xs text-gray-500 mt-1">Aguardando envio...</p>
                         )}
                         {(stagedFile.progress > 0 || stagedFile.progress === -1) && (
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                                 <div
-                                    className={`h-2 rounded-full transition-all duration-300 ${
-                                        stagedFile.error ? "bg-red-500" 
-                                        : stagedFile.progress === 100 ? "bg-green-500" 
-                                        : "bg-ifpr-green"
-                                    }`}
+                                    className={`h-2 rounded-full transition-all duration-300 ${stagedFile.error ? "bg-red-500"
+                                        : stagedFile.progress === 100 ? "bg-green-500"
+                                            : "bg-ifpr-green"
+                                        }`}
                                     style={{ width: `${stagedFile.progress > 0 ? stagedFile.progress : 100}%` }}
                                 />
                             </div>
                         )}
 
-                        {/* Mensagem de Erro */}
                         {stagedFile.error && (
                             <p className="text-xs text-red-600 mt-1">Falha no envio</p>
                         )}
                     </div>
-                    {/* ===== FIM DA LÓGICA ADICIONADA ===== */}
-                    
+
                     <button onClick={() => onRemove(stagedFile.id)} className="p-1 rounded-full hover:bg-gray-100 flex-shrink-0">
                         <X className="h-5 w-5 text-gray-500" />
                     </button>

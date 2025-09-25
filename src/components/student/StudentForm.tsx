@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
 
-// Imports da refatoração
 import { useMinorLogic } from '../../hooks/useMinorLogic';
 import FormContainer from '../ui/FormContainer';
 
@@ -16,7 +15,6 @@ import ResponsibleFormFields from './responsible/ResponsibleFormFields';
 import { calculateAge } from '../../lib/utils';
 
 
-// Schema para um responsável
 const responsibleSchema = z.object({
   completeName: z.string().min(1, 'Nome do responsável é obrigatório.'),
   email: z.string().email('E-mail do responsável é inválido.'),
@@ -24,7 +22,6 @@ const responsibleSchema = z.object({
   kinship: z.string().min(1, 'Parentesco é obrigatório.'),
 });
 
-// Schema principal com validação condicional
 const createStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
   password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres.'),
@@ -39,7 +36,7 @@ const createStudentSchema = z.object({
   ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
   responsibles: z.array(responsibleSchema).optional(),
 }).refine(data => {
-  if (!data.birthDate) return true; 
+  if (!data.birthDate) return true;
   const age = calculateAge(data.birthDate);
   if (age < 18) {
     return data.responsibles && data.responsibles.length > 0;
@@ -77,7 +74,6 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
     name: "responsibles",
   });
 
-  // ✅ Toda a lógica de useEffect e useState foi movida para o hook
   const { isMinor } = useMinorLogic({
     watch,
     fieldArray: { fields, append, replace },
@@ -99,7 +95,6 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
     setApiError(null);
     const payload: CreateStudentDTO = { ...data };
 
-    // A lógica de remover 'responsibles' continua aqui, pois é parte da submissão
     if (!isMinor) {
       delete (payload as any).responsibles;
     }
@@ -108,7 +103,6 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    // ✅ O layout do formulário agora é controlado pelo FormContainer
     <FormContainer
       title="Criar Estudante"
       onSubmit={handleSubmit(onSubmit)}
@@ -116,10 +110,8 @@ export default function StudentForm({ onClose }: { onClose: () => void }) {
       isLoading={isSubmitting || createMutation.isPending}
       apiError={apiError}
     >
-      {/* ✅ Corrigido para "create" e usando o componente de campos unificado */}
       <StudentFields register={register} control={control} errors={errors} variant="create" />
-      
-      {/* A lógica condicional de UI permanece no componente */}
+
       {isMinor && (
         <div className="pt-6 border-t mt-6">
           <ResponsibleFormFields

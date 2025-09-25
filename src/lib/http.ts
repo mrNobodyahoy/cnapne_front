@@ -1,10 +1,10 @@
 import axios from "axios";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000,
-  withCredentials: true, // envia/recebe o cookie automaticamente
+  withCredentials: true,
 });
 
 api.interceptors.response.use(

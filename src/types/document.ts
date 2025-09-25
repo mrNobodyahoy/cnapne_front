@@ -7,8 +7,8 @@ export type Document = {
 };
 
 export type StagedFile = {
-  id: string;        // ID único para controle no front-end
-  file: File;        // O objeto File real
-  progress: number;  // Progresso do upload (0-100, ou -1 para erro)
-  error?: string;    // Mensagem de erro, se houver
+  id: string;
+  file: File;
+  progress: number;
+  error?: string;
 };

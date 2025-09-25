@@ -3,24 +3,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { getStudentMe } from "../../services/studentService";
 import { formatPhone } from "../../lib/formatters";
-import { 
-  UserCircle, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  Users, 
-  Hash, 
+import {
+  UserCircle,
+  Mail,
+  Phone,
+  Calendar,
+  Users,
+  Hash,
   CheckCircle,
   BookUser,
   HeartHandshake,
-  LoaderCircle,
   AlertTriangle,
   CaseSensitive,
   PersonStanding
 } from "lucide-react";
 
 
-// Componente para um campo de informação individual com ícone
 const InfoField = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: string | undefined }) => (
   <div>
     <div className="flex items-center text-sm text-gray-500">
@@ -31,7 +29,6 @@ const InfoField = ({ icon: Icon, label, value }: { icon: React.ElementType, labe
   </div>
 );
 
-// Componente para um card de seção
 const SectionCard = ({ title, icon: Icon, children }: { title: string, icon: React.ElementType, children: React.ReactNode }) => (
   <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
     <div className="flex items-center border-b pb-3 mb-4">
@@ -44,7 +41,6 @@ const SectionCard = ({ title, icon: Icon, children }: { title: string, icon: Rea
   </div>
 );
 
-// Componente de "esqueleto" para o estado de carregamento
 const ProfileSkeleton = () => (
   <div className="max-w-4xl mx-auto mt-6 animate-pulse">
     <div className="bg-white rounded-2xl shadow p-8 space-y-6">
@@ -62,18 +58,14 @@ const ProfileSkeleton = () => (
 );
 
 
-// --- Componente Principal da Página ---
-
 export default function StudentOwnProfilePage() {
   const { data: student, isLoading, error } = useQuery({
     queryKey: ["student-profile-me"],
     queryFn: getStudentMe,
   });
 
-  // Estado de Carregamento Melhorado (Heurística #1)
   if (isLoading) return <ProfileSkeleton />;
 
-  // Estado de Erro Melhorado (Heurística #9)
   if (error) return (
     <div className="max-w-4xl mx-auto mt-6 p-8 bg-red-50 text-red-700 border border-red-200 rounded-2xl flex flex-col items-center gap-4">
       <AlertTriangle className="h-12 w-12" />
@@ -81,12 +73,11 @@ export default function StudentOwnProfilePage() {
       <p>Não foi possível buscar suas informações. Por favor, tente recarregar a página.</p>
     </div>
   );
-  
+
   if (!student) return <p>Não foi possível carregar os dados.</p>;
 
   return (
     <div className="max-w-4xl mx-auto mt-6 space-y-8">
-      {/* Cabeçalho do Perfil */}
       <div className="bg-white rounded-2xl shadow p-8 flex items-center gap-6">
         <UserCircle className="h-24 w-24 text-gray-300" strokeWidth={1} />
         <div>
@@ -94,15 +85,14 @@ export default function StudentOwnProfilePage() {
           <p className="text-gray-600 text-lg mt-1">Estudante</p>
         </div>
       </div>
-      
-      {/* Seções de Informações com Cards */}
+
       <div className="space-y-6">
         <SectionCard title="Dados Acadêmicos" icon={BookUser}>
           <InfoField icon={Hash} label="Matrícula" value={student.registration} />
           <InfoField icon={Users} label="Turma" value={student.team} />
           <InfoField icon={CheckCircle} label="Status" value={student.status} />
         </SectionCard>
-        
+
         <SectionCard title="Informações Pessoais" icon={PersonStanding}>
           <InfoField icon={Mail} label="Email" value={student.email} />
           <InfoField icon={Phone} label="Telefone" value={formatPhone(student.phone)} />
@@ -111,9 +101,8 @@ export default function StudentOwnProfilePage() {
           <InfoField icon={Users} label="Etnia" value={student.ethnicity} />
         </SectionCard>
 
-        {/* Seção de Responsáveis */}
         {student.responsibles && student.responsibles.length > 0 && (
-           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
             <div className="flex items-center border-b pb-3 mb-4">
               <HeartHandshake className="h-6 w-6 text-ifpr-green mr-3" />
               <h2 className="text-xl font-bold text-gray-800">Responsáveis</h2>
