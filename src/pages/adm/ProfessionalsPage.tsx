@@ -1,7 +1,6 @@
 import { AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useProfessionalsPage } from '../../hooks/useProfessionalsPage';
 import Modal from '../../components/ui/Modal';
-import Button from '../../components/ui/Button';
 import ProfessionalList from '../../components/professional/ProfessionalList';
 import ProfessionalForm from '../../components/professional/ProfessionalForm';
 import ProfessionalEditForm from '../../components/professional/ProfessionalEditForm';
@@ -37,7 +36,7 @@ export default function ProfissionaisPage() {
     handlers.setStatusFilter(value);
   };
 
-  if (isLoading && !pageData) { // Mostra o loading inicial
+  if (isLoading && !pageData) {
     return (
       <div className="flex items-center justify-center p-8">
         <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />

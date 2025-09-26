@@ -3,7 +3,7 @@ import { me } from "../services/authService";
 
 export type Role =
   | "COORDENACAO_CNAPNE"
-  | "EQUIPE_MULTIDISCIPLINAR"
+  | "EQUIPE_ACOMPANHAMENTO"
   | "EQUIPE_AEE"
   | "ESTUDANTE"
   | string;

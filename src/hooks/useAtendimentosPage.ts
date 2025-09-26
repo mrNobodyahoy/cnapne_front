@@ -8,12 +8,10 @@ export function useAtendimentosPage() {
   // No futuro, você adicionaria os estados de filtro aqui
   // const [filters, setFilters] = useState({});
 
-  // Monta os parâmetros para a chamada da API
   const queryParams: GetAtendimentosParams = {
     page,
     size: 10,
-    sort: "sessionDate,desc", // Ordena pela data da sessão, mais recentes primeiro
-    // ...filters
+    sort: "sessionDate,desc",
   };
 
   const {
@@ -23,9 +21,9 @@ export function useAtendimentosPage() {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["atendimentos", queryParams], // A queryKey inclui os parâmetros para re-fetching automático
+    queryKey: ["atendimentos", queryParams],
     queryFn: () => getAtendimentosPaginated(queryParams),
-    placeholderData: keepPreviousData, // Mantém os dados antigos visíveis enquanto carrega os novos
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60,
   });
 

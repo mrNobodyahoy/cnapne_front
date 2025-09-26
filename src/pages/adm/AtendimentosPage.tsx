@@ -1,6 +1,6 @@
 import { useAtendimentosPage } from '../../hooks/useAtendimentosPage';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';
-import AtendimentoList from '../../components/atendimento/AtendimentoList';
+import AtendimentoList from '../../components/session/atendimento/AtendimentoList';
 import Pagination from '../../components/ui/Pagination';
 
 export default function AtendimentosPage() {

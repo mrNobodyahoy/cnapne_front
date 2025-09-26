@@ -7,7 +7,6 @@ import type {
   GetAcompanhamentosParams,
 } from "../types/followUp";
 
-// Nova função paginada
 export async function getAcompanhamentosPaginated(
   params: GetAcompanhamentosParams
 ): Promise<Page<ReadFollowUp>> {

@@ -7,7 +7,6 @@ import type {
   GetAtendimentosParams,
 } from "../types/atendimento";
 
-// Nova função paginada
 export async function getAtendimentosPaginated(
   params: GetAtendimentosParams
 ): Promise<Page<ReadService>> {

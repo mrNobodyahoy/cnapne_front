@@ -15,3 +15,10 @@ export const ethnicityOptions = [
   { value: "indigena", label: "Indígena" },
   { value: "nao_informar", label: "Prefiro Não Informar" },
 ];
+
+export const statusOptions = [
+  { value: "", label: "Selecione um status..." },
+  { value: "Agendado", label: "Agendado" },
+  { value: "Realizado", label: "Realizado" },
+  { value: "Cancelado", label: "Cancelado" },
+];

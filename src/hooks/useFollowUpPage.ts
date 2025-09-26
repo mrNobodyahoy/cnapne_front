@@ -5,7 +5,6 @@ import type { GetAcompanhamentosParams } from "../types/followUp";
 
 export function useFollowUpPage() {
   const [page, setPage] = useState(0);
-  // No futuro, você adicionaria os estados de filtro aqui
   // const [filters, setFilters] = useState({});
 
   const queryParams: GetAcompanhamentosParams = {

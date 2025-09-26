@@ -13,7 +13,6 @@ export async function getProfessionalsPaginated(
   params: GetProfessionalsParams
 ): Promise<Page<ReadProfessionalDTO>> {
   const { data } = await api.get<Page<ReadProfessionalDTO>>("/professionals", {
-    // A API do axios envia apenas os parâmetros que não são undefined
     params,
   });
   return data;

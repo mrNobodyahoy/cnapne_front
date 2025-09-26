@@ -1,9 +1,8 @@
-// Adicione estes tipos ao seu arquivo de tipos
 export interface Page<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-  number: number; // número da página atual (base 0)
+  number: number;
   size: number;
   first: boolean;
   last: boolean;
@@ -17,7 +16,6 @@ export interface GetProfessionalsParams {
   active?: boolean;
 }
 
-// Seus DTOs existentes continuam iguais
 export interface ReadProfessionalDTO {
   id: string;
   email: string;

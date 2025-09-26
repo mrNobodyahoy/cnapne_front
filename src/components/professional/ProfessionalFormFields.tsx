@@ -26,10 +26,9 @@ export default function ProfessionalFormFields<TFieldValues extends FieldValues>
         label="Nome Completo"
         type="text"
         id="fullName"
-        {...register("fullName" as any)} 
+        {...register("fullName" as any)}
         error={errors.fullName?.message as string}
       />
-
       <Input
         label="E-mail"
         type="email"
@@ -37,7 +36,6 @@ export default function ProfessionalFormFields<TFieldValues extends FieldValues>
         {...register("email" as any)}
         error={errors.email?.message as string}
       />
-      
       {variant === 'create' && (
         <Input
           label="Senha"
@@ -47,23 +45,36 @@ export default function ProfessionalFormFields<TFieldValues extends FieldValues>
           error={errors.password?.message as string}
         />
       )}
-
-      <Select
-        label="Especialidade"
-        id="specialty"
-        {...register("specialty" as any)}
-        error={errors.specialty?.message as string}
-        options={specialtyOptions}
+      <Controller
+        name={"specialty" as any}
+        control={control}
+        render={({ field }) => (
+          <Select
+            label="Especialidade"
+            id="specialty"
+            options={specialtyOptions}
+            error={errors.specialty?.message as string}
+            value={field.value}
+            onChange={field.onChange}
+            placeholder="Selecione uma especialidade..."
+          />
+        )}
       />
-
-      <Select
-        label="Função"
-        id="role"
-        {...register("role" as any)}
-        error={errors.role?.message as string}
-        options={roleOptions}
+      <Controller
+        name={"role" as any}
+        control={control}
+        render={({ field }) => (
+          <Select
+            label="Função"
+            id="role"
+            options={roleOptions}
+            error={errors.role?.message as string}
+            value={field.value}
+            onChange={field.onChange}
+            placeholder="Selecione uma função..."
+          />
+        )}
       />
-
       {variant === 'edit' && (
         <div className="flex flex-col md:col-span-2">
           <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -76,7 +87,7 @@ export default function ProfessionalFormFields<TFieldValues extends FieldValues>
               <ToggleSwitch
                 id="active"
                 checked={field.value}
-                onChange={field.onChange}
+                onCheckedChange={field.onChange}
               />
             )}
           />

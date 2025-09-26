@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { StudentSummary } from '../../types/student';
-import { ClipboardList } from 'lucide-react';
+import { ClipboardList, ClipboardCheck } from 'lucide-react';
+
 
 interface StudentListProps {
   students: StudentSummary[] | undefined;
@@ -15,7 +16,6 @@ export default function StudentList({ students }: StudentListProps) {
     );
   }
 
-  // ALTERAÇÃO 1: Simplificar para renderizar uma única lista
   return (
     <div className="mt-6">
       <ul className="divide-y divide-gray-200 rounded-lg border bg-white shadow-sm">
@@ -35,19 +35,28 @@ export default function StudentList({ students }: StudentListProps) {
             <div className="flex items-center gap-4 ml-4">
               <span
                 className={`text-xs font-semibold px-3 py-1 rounded-full ${student.status === 'ATIVO'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
                   }`}
               >
                 {student.status}
               </span>
               <Link
-                to={`/alunos/${student.id}/sessoes`}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-ifpr-green border border-gray-300 rounded-lg hover:bg-green-50 transition-colors"
-                title="Gerenciar Atendimentos e Acompanhamentos"
+                to={`/alunos/${student.id}/novo-atendimento`}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 border border-gray-300 rounded-lg hover:bg-blue-50 transition-colors"
+                title="Criar novo Atendimento"
               >
                 <ClipboardList className="h-4 w-4" />
-                <span>Sessões</span>
+                <span>Atendimento</span>
+              </Link>
+
+              <Link
+                to={`/alunos/${student.id}/novo-acompanhamento`}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-ifpr-green border border-gray-300 rounded-lg hover:bg-green-50 transition-colors"
+                title="Criar novo Acompanhamento"
+              >
+                <ClipboardCheck className="h-4 w-4" />
+                <span>Acompanhar</span>
               </Link>
             </div>
           </li>

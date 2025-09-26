@@ -1,7 +1,7 @@
 // src/components/layout/Sidebar.tsx
 
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle, ClipboardList } from "lucide-react";
+import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle, ClipboardList, ClipboardCheck } from "lucide-react";
 import { logoutRequest } from "../../services/authService";
 import { useAuth, type Role } from "../../store/auth";
 import Button from "../ui/Button";
@@ -28,7 +28,7 @@ export default function Sidebar() {
       { to: "/alunos", label: "Alunos", icon: Users },
       { to: "/professionals", label: "Profissionais", icon: BookUser },
       { to: "/atendimentos", label: "Atendimentos", icon: ClipboardList },
-      { to: "/acompanhamentos", label: "Acompanhamentos", icon: ClipboardList },
+      { to: "/acompanhamentos", label: "Acompanhamentos", icon: ClipboardCheck },
 
     ];
 

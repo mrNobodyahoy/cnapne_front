@@ -12,10 +12,9 @@ import StudentDashboardPage from "./pages/student/StudentDashboardPage";
 import StudentOwnProfilePage from "./pages/student/StudentOwnProfilePage";
 import StudentDocumentsPage from "./pages/student/StudentDocumentsPage";
 
-import StudentSessionsPage from "./pages/adm/StudentSessionsPage";
-
+import NewAtendimentoPage from "./pages/adm/NewAtendimentoPage";
+import NewAcompanhamentoPage from "./pages/adm/NewAcompanhamentoPage";
 import AtendimentosPage from "./pages/adm/AtendimentosPage";
-
 import FollowUpPage from "./pages/adm/FollowUpPage";
 
 
@@ -46,13 +45,15 @@ const routes = [
             children: [
               { index: true, element: <AlunosPage /> },
               { path: ":studentId", element: <StudentProfilePage /> },
-              { path: ":studentId/sessoes", element: <StudentSessionsPage /> },
+              { path: ":studentId/novo-atendimento", element: <NewAtendimentoPage /> },
+              { path: ":studentId/novo-acompanhamento", element: <NewAcompanhamentoPage /> },
             ],
           },
           { path: "professionals", element: <ProfissionaisPage /> },
           { path: "atendimentos", element: <AtendimentosPage /> },
           { path: "acompanhamentos", element: <FollowUpPage /> },
           { path: "admin/config", element: <AdminConfigPage /> },
+
         ],
       },
     ],

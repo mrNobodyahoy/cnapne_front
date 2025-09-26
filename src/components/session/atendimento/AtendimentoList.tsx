@@ -1,4 +1,4 @@
-import type { ReadService } from '../../types/atendimento';
+import type { ReadService } from '../../../types/atendimento';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Link } from 'react-router-dom';

@@ -7,10 +7,11 @@ export interface ReadFollowUp {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   description: string;
   tasks: string;
+  areasCovered: string;
+  nextSteps: string;
   student: StudentSummary;
   professionals: ReadProfessionalDTO[];
 }
@@ -19,24 +20,25 @@ export interface CreateFollowUp {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   studentId: string;
   description: string;
   tasks: string;
   professionalIds: string[];
+  areasCovered?: string;
 }
 
 export interface UpdateFollowUp {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   studentId: string;
   description: string;
   tasks: string;
   professionalIds: string[];
+  areasCovered?: string;
+  nextSteps?: string;
 }
 
 export interface Page<T> {

@@ -7,11 +7,12 @@ export interface ReadService {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   typeService: string;
   descriptionService: string;
   tasks: string;
+  objectives: string;
+  results: string;
   student: StudentSummary;
   professionals: ReadProfessionalDTO[];
 }
@@ -20,26 +21,27 @@ export interface CreateService {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   studentId: string;
   typeService: string;
   descriptionService: string;
   tasks: string;
   professionalIds: string[];
+  objectives?: string;
 }
 
 export interface UpdateService {
   sessionDate: string;
   sessionTime: string;
   sessionLocation: string;
-  periodicity: string;
   status: string;
   studentId: string;
   typeService: string;
   descriptionService: string;
   tasks: string;
   professionalIds: string[];
+  objectives?: string;
+  results?: string;
 }
 
 export interface Page<T> {

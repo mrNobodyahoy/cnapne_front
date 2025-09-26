@@ -1,6 +1,6 @@
 import { useFollowUpPage } from '../../hooks/useFollowUpPage';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';
-import FollowUpList from '../../components/followUp/FollowUpList';
+import FollowUpList from '../../components/session/followUp/FollowUpList';
 import Pagination from '../../components/ui/Pagination';
 
 export default function FollowUpPage() {
