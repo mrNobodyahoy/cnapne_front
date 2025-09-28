@@ -17,8 +17,8 @@ export const ethnicityOptions = [
 ];
 
 export const statusOptions = [
-  { value: "", label: "Selecione um status..." },
-  { value: "Agendado", label: "Agendado" },
-  { value: "Realizado", label: "Realizado" },
-  { value: "Cancelado", label: "Cancelado" },
+  { value: "", label: "Todos os Status" },
+  { value: "AGENDADO", label: "Agendado" },
+  { value: "REALIZADO", label: "Realizado" },
+  { value: "CANCELADO", label: "Cancelado" },
 ];

@@ -8,7 +8,6 @@ import {
 import { statusOptions } from '../../lib/constants';
 import Input from '../ui/Input';
 import ProfessionalSelect from '../professional/ProfessionalSelect';
-import Select from '../ui/Select';
 
 type Option = { value: string; label: string };
 
@@ -31,7 +30,6 @@ export default function SessionFormFields<TFieldValues extends FieldValues>({
 }: SessionFormFieldsProps<TFieldValues>) {
     return (
         <>
-            {/* ESTILO: Nova estrutura de fieldset com borda superior verde e título destacado */}
             <fieldset className="space-y-4 rounded-lg border border-gray-200 p-4 pt-6 relative">
                 <legend className="absolute -top-3 left-3 bg-white px-2 text-base font-semibold text-ifpr-green">
                     Agendamento
@@ -63,15 +61,9 @@ export default function SessionFormFields<TFieldValues extends FieldValues>({
 
             <fieldset className="space-y-4 rounded-lg border border-gray-200 p-4 pt-6 relative">
                 <legend className="absolute -top-3 left-3 bg-white px-2 text-base font-semibold text-ifpr-green">
-                    Status e Responsáveis
+                    Equipe
                 </legend>
-                <Select
-                    id="status"
-                    label="Status"
-                    {...register('status' as any)}
-                    error={errors.status?.message as string}
-                    options={statusOptions}
-                />
+
                 <ProfessionalSelect
                     control={control}
                     error={errors.professionalIds?.message as string}

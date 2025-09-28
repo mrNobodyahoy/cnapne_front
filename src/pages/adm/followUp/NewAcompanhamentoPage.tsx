@@ -1,11 +1,10 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getStudentById } from '../../services/studentService';
+import { getStudentById } from '../../../services/studentService';
 import { LoaderCircle, AlertTriangle, ArrowLeft } from 'lucide-react';
-import AtendimentoForm from '../../components/session/atendimento/AtendimentoForm';
-import AcompanhamentoForm from '../../components/session/followUp/FollowUpForm';
+import FollowUpForm from '../../../components/session/followUp/FollowUpForm';
 
-export default function StudentSessionsPage() {
+export default function NewAcompanhamentoPage() {
     const { studentId } = useParams<{ studentId: string }>();
 
     const { data: student, isLoading, isError } = useQuery({
@@ -23,25 +22,19 @@ export default function StudentSessionsPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
             <Link to="/alunos" className="inline-flex items-center gap-2 text-ifpr-green hover:underline mb-6">
                 <ArrowLeft className="h-5 w-5" />
                 Voltar para a lista de alunos
             </Link>
 
             <div className="bg-white p-6 rounded-xl border shadow-sm">
-                <h1 className="text-3xl font-bold text-gray-900">Criar Nova Sessão para</h1>
-                <p className="mt-1 text-2xl text-gray-600">{student.completeName}</p>
+                <h1 className="text-2xl font-bold text-gray-900">Novo Acompanhamento para</h1>
+                <p className="mt-1 text-xl text-gray-600">{student.completeName}</p>
                 <p className="text-gray-500">Matrícula: {student.registration}</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Formulário de Atendimentos */}
-                <AtendimentoForm studentId={student.id} />
-
-                {/* Formulário de Acompanhamentos */}
-                <AcompanhamentoForm studentId={student.id} />
-            </div>
+            <FollowUpForm studentId={student.id} />
         </div>
     );
 }

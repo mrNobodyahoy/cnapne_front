@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getStudentById } from '../../services/studentService';
+import { getStudentById } from '../../../services/studentService';
 import { LoaderCircle, AlertTriangle, ArrowLeft } from 'lucide-react';
-import AtendimentoForm from '../../components/session/atendimento/AtendimentoForm';
+import AtendimentoForm from '../../../components/session/atendimento/AtendimentoForm';
 
 export default function NewAtendimentoPage() {
     const { studentId } = useParams<{ studentId: string }>();

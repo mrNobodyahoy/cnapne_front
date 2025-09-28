@@ -1,24 +1,30 @@
-import { forwardRef, type InputHTMLAttributes } from "react";
-import type { Ref } from "react";
+import { forwardRef, type InputHTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
-  label?: string;
+  label: string;
   error?: string;
   id: string;
 };
 
-const Input = forwardRef<HTMLInputElement, Props>(({ label, error, id, ...rest }, ref) => {
+const Input = forwardRef<HTMLInputElement, Props>(({ label, error, id, className, ...rest }, ref) => {
   return (
-    <div className="space-y-1">
-      {label && <label htmlFor={id} className="text-sm font-medium">{label}</label>}
+    <div className="w-full">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
       <input
         id={id}
-        ref={ref as Ref<HTMLInputElement>}
-        className={`w-full rounded-md border p-2 outline-none focus:ring-2 focus:ring-indigo-500
-          ${error ? "border-red-500" : "border-slate-300"}`}
+        ref={ref}
+        className={cn(
+          'w-full rounded-lg border bg-gray-50 p-2.5 text-gray-800 shadow-sm transition-colors',
+          'focus:outline-none focus:ring-2 focus:ring-ifpr-green focus:border-ifpr-green',
+          error ? 'border-red-500 ring-red-500' : 'border-gray-300',
+          className
+        )}
         {...rest}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 });

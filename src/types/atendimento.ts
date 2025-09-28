@@ -57,7 +57,7 @@ export interface Page<T> {
 export interface GetAtendimentosParams {
   page?: number;
   size?: number;
-  studentId?: string;
+  studentName?: string;
   professionalId?: string;
   status?: string;
   startDate?: string;

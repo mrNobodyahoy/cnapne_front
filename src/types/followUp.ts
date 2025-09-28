@@ -26,6 +26,7 @@ export interface CreateFollowUp {
   tasks: string;
   professionalIds: string[];
   areasCovered?: string;
+  nextSteps?: string;
 }
 
 export interface UpdateFollowUp {
@@ -54,7 +55,7 @@ export interface Page<T> {
 export interface GetAcompanhamentosParams {
   page?: number;
   size?: number;
-  studentId?: string;
+  studentName?: string;
   professionalId?: string;
   status?: string;
   startDate?: string;

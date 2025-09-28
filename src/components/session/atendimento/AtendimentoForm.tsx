@@ -11,14 +11,13 @@ import { useState } from 'react';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
 import Textarea from '../../ui/Textarea';
-import SessionFormFields from '../SessionFormFields';
+import ProfessionalSelect from '../../professional/ProfessionalSelect';
 import { useProfessionalSearch } from '../../../hooks/useProfessionalSearch';
 
 const createServiceSchema = z.object({
     sessionDate: z.string().min(1, 'Data é obrigatória.'),
     sessionTime: z.string().min(1, 'Horário é obrigatório.'),
     sessionLocation: z.string().min(1, 'Local é obrigatório.'),
-    status: z.string().min(1, 'Status é obrigatório.'),
     typeService: z.string().min(1, 'Tipo do atendimento é obrigatório.'),
     descriptionService: z.string().min(1, 'Descrição é obrigatória.'),
     tasks: z.string().min(1, 'Tarefas/Encaminhamentos são obrigatórias.'),
@@ -59,36 +58,55 @@ export default function AtendimentoForm({ studentId }: { studentId: string }) {
 
     const onSubmit = (data: FormData) => {
         const formattedTime = data.sessionTime.length === 5 ? `${data.sessionTime}:00` : data.sessionTime;
-        const payload: CreateService = { ...data, sessionTime: formattedTime, studentId };
+        const payload: CreateService = { ...data, status: 'AGENDADO', sessionTime: formattedTime, studentId };
         createMutation.mutate(payload);
     };
 
     return (
-        // ESTILO: Removida a borda daqui para focar nas seções internas
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <SessionFormFields
-                key={formKey}
-                register={register}
-                errors={errors}
-                control={control}
-                professionalSearchIsLoading={professionalSearchIsLoading}
-                searchedOptions={searchedOptions}
-                onProfessionalSearchChange={setSearchTerm}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* --- SEÇÃO DE AGENDAMENTO --- */}
+            <fieldset className="space-y-4 rounded-lg border border-gray-200 p-6 relative shadow-sm">
+                <legend className="absolute -top-3.5 left-4 bg-white px-2 text-base font-semibold text-ifpr-green">
+                    Agendamento
+                </legend>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input id="sessionDate" label="Data" type="date" {...register('sessionDate')} error={errors.sessionDate?.message} />
+                    <Input id="sessionTime" label="Horário" type="time" {...register('sessionTime')} error={errors.sessionTime?.message} />
+                    <div className="md:col-span-2">
+                        <Input id="sessionLocation" label="Local" {...register('sessionLocation')} error={errors.sessionLocation?.message} />
+                    </div>
+                </div>
+            </fieldset>
 
-            <fieldset className="space-y-4 rounded-lg border border-gray-200 p-4 pt-6 relative">
-                <legend className="absolute -top-3 left-3 bg-white px-2 text-base font-semibold text-ifpr-green">
+            {/* --- SEÇÃO DE EQUIPE --- */}
+            <fieldset className="space-y-4 rounded-lg border border-gray-200 p-6 relative shadow-sm">
+                <legend className="absolute -top-3.5 left-4 bg-white px-2 text-base font-semibold text-ifpr-green">
+                    Equipe
+                </legend>
+                <ProfessionalSelect
+                    control={control}
+                    error={errors.professionalIds?.message as string}
+                    isLoading={professionalSearchIsLoading}
+                    searchedOptions={searchedOptions}
+                    onSearchChange={setSearchTerm}
+                />
+            </fieldset>
+
+            {/* --- SEÇÃO DE REGISTROS --- */}
+            <fieldset className="space-y-4 rounded-lg border border-gray-200 p-6 relative shadow-sm">
+                <legend className="absolute -top-3.5 left-4 bg-white px-2 text-base font-semibold text-ifpr-green">
                     Registros do Atendimento
                 </legend>
                 <Input id='typeService' label="Tipo do Atendimento" {...register('typeService')} error={errors.typeService?.message} />
                 <Textarea id='descriptionService' label="Descrição do Atendimento" {...register('descriptionService')} error={errors.descriptionService?.message} />
-                <Textarea id='objectives' label="Objetivos da Sessão" {...register('objectives')} error={errors.objectives?.message} />
-                <Textarea id="tasks" label="Tarefas / Encaminhamentos" {...register('tasks' as any)} error={errors.tasks?.message as string} />
+                <Textarea id='objectives' label="Objetivos da Sessão (Opcional)" {...register('objectives')} error={errors.objectives?.message} />
+                <Textarea id="tasks" label="Tarefas / Encaminhamentos" {...register('tasks')} error={errors.tasks?.message} />
             </fieldset>
 
-            <div className="flex justify-end pt-2 gap-4">
-                <Button type="button" variant="secondary" onClick={handleCancel}>
-                    Cancelar
+            {/* --- BOTÕES DE AÇÃO --- */}
+            <div className="flex justify-end pt-4 gap-4">
+                <Button type="button" variant="secondary" onClick={handleCancel} disabled={isSubmitting || createMutation.isPending}>
+                    Limpar
                 </Button>
                 <Button type="submit" loading={isSubmitting || createMutation.isPending}>
                     Salvar Atendimento

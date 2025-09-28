@@ -1,10 +1,10 @@
 import { LoaderCircle, AlertTriangle } from "lucide-react";
-import { useStudentsPage } from "../../hooks/useStudentPage";
-import StudentPageHeader from "../../components/student/StudentPageHeader";
-import StudentList from "../../components/student/StudentList";
-import StudentForm from "../../components/student/StudentForm";
-import Modal from "../../components/ui/Modal";
-import Pagination from "../../components/ui/Pagination";
+import { useStudentsPage } from "../../../hooks/useStudentPage";
+import StudentPageHeader from "../../../components/student/StudentPageHeader";
+import StudentList from "../../../components/student/StudentList";
+import StudentForm from "../../../components/student/StudentForm";
+import Modal from "../../../components/ui/Modal";
+import Pagination from "../../../components/ui/Pagination";
 
 type Status = "ALL" | "ATIVO" | "INATIVO";
 

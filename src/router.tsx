@@ -4,18 +4,21 @@ import AppLayout from "./layouts/AppLayout";
 import Login from "./pages/common/Login";
 import ProtectedRoute from "./routes/protectedRoutes";
 import HomePage from "./pages/adm/HomePage";
-import AlunosPage from "./pages/adm/AlunosPage";
-import ProfissionaisPage from "./pages/adm/ProfessionalsPage";
-import StudentProfilePage from "./pages/adm/StudentProfilePage";
+import AlunosPage from "./pages/adm/student/AlunosPage";
+import ProfissionaisPage from "./pages/adm/professional/ProfessionalsPage";
+import StudentProfilePage from "./pages/adm/student/StudentProfilePage";
 import StudentDashboardPage from "./pages/student/StudentDashboardPage";
 
 import StudentOwnProfilePage from "./pages/student/StudentOwnProfilePage";
 import StudentDocumentsPage from "./pages/student/StudentDocumentsPage";
 
-import NewAtendimentoPage from "./pages/adm/NewAtendimentoPage";
-import NewAcompanhamentoPage from "./pages/adm/NewAcompanhamentoPage";
-import AtendimentosPage from "./pages/adm/AtendimentosPage";
-import FollowUpPage from "./pages/adm/FollowUpPage";
+import NewAtendimentoPage from "./pages/adm/servicesAtendimento/NewAtendimentoPage";
+import NewAcompanhamentoPage from "./pages/adm/followUp/NewAcompanhamentoPage";
+import AtendimentosPage from "./pages/adm/servicesAtendimento/AtendimentosPage";
+import FollowUpPage from "./pages/adm/followUp/FollowUpPage";
+import AtendimentoProfilePage from "./pages/adm/servicesAtendimento/AtendimentoProfilePage";
+import FollowUpProfilePage from "./pages/adm/followUp/FollowUpProfilePage";
+
 
 
 const AdminConfigPage = () => <h1 className="text-3xl font-bold">Página de Admin</h1>;
@@ -48,8 +51,26 @@ const routes = [
               { path: ":studentId/novo-atendimento", element: <NewAtendimentoPage /> },
               { path: ":studentId/novo-acompanhamento", element: <NewAcompanhamentoPage /> },
             ],
+
           },
           { path: "professionals", element: <ProfissionaisPage /> },
+
+          {
+            path: "atendimentos",
+            children: [
+              { index: true, element: <AtendimentosPage /> },
+              { path: ":atendimentoId", element: <AtendimentoProfilePage /> },
+            ]
+          },
+
+          {
+            path: "acompanhamentos",
+            children: [
+              { index: true, element: <FollowUpPage /> },
+              { path: ":acompanhamentoId", element: <FollowUpProfilePage /> },
+            ]
+          },
+
           { path: "atendimentos", element: <AtendimentosPage /> },
           { path: "acompanhamentos", element: <FollowUpPage /> },
           { path: "admin/config", element: <AdminConfigPage /> },

@@ -3,14 +3,21 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getAcompanhamentosPaginated } from "../services/followUpService";
 import type { GetAcompanhamentosParams } from "../types/followUp";
 
-export function useFollowUpPage() {
+interface Filters {
+  studentName?: string;
+  status?: string;
+}
+
+export function useFollowUpPage(filters: Filters) {
   const [page, setPage] = useState(0);
-  // const [filters, setFilters] = useState({});
+  const { studentName, status } = filters;
 
   const queryParams: GetAcompanhamentosParams = {
     page,
     size: 10,
     sort: "sessionDate,desc",
+    studentName: studentName || undefined,
+    status: status || undefined,
   };
 
   const {
@@ -20,7 +27,7 @@ export function useFollowUpPage() {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["acompanhamentos", queryParams],
+    queryKey: ["acompanhamentos", queryParams], // A queryKey agora inclui todos os filtros
     queryFn: () => getAcompanhamentosPaginated(queryParams),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60,
