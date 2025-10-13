@@ -10,7 +10,6 @@ import { ptBR } from 'date-fns/locale';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 
-// Componente auxiliar reutilizado
 const InfoField = ({ icon: Icon, label, value, className = '' }: { icon: any, label: string, value: string | undefined | null, className?: string }) => (
     <div className={className}>
         <div className="flex items-center text-sm font-medium text-gray-500">

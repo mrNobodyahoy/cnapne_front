@@ -6,6 +6,7 @@ import type {
   StudentSummary,
   Page,
   GetStudentsParams,
+  TimelineItem,
 } from "../types/student";
 
 export async function getStudents(
@@ -44,6 +45,15 @@ export async function updateStudent(
 
 export async function deleteStudent(id: string): Promise<void> {
   await api.delete(`/students/${id}`);
+}
+
+export async function getStudentTimeline(
+  studentId: string
+): Promise<TimelineItem[]> {
+  const { data } = await api.get<TimelineItem[]>(
+    `/students/${studentId}/timeline`
+  );
+  return data;
 }
 
 export async function getStudentMe(): Promise<Student> {

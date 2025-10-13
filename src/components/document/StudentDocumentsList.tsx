@@ -1,5 +1,5 @@
 import type { Student } from "../../types/student";
-import { useStudentDocuments } from "../../hooks/useStudentDocuments";
+import { useStudentDocuments } from "../../hooks/student/useStudentDocuments";
 
 import DocumentUploader from "./DocumentUploader";
 import StagedFilesList from "./StagedFilesList";

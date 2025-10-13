@@ -5,7 +5,6 @@ import {
     type FieldValues,
     type UseFormRegister,
 } from 'react-hook-form';
-import { statusOptions } from '../../lib/constants';
 import Input from '../ui/Input';
 import ProfessionalSelect from '../professional/ProfessionalSelect';
 

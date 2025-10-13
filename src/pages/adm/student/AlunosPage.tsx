@@ -1,5 +1,5 @@
 import { LoaderCircle, AlertTriangle } from "lucide-react";
-import { useStudentsPage } from "../../../hooks/useStudentPage";
+import { useStudentsPage } from "../../../hooks/student/useStudentPage";
 import StudentPageHeader from "../../../components/student/StudentPageHeader";
 import StudentList from "../../../components/student/StudentList";
 import StudentForm from "../../../components/student/StudentForm";

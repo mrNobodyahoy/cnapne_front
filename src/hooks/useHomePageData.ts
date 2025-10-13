@@ -1,65 +1,56 @@
-import { useState } from "react";
-import { useQueries, keepPreviousData } from "@tanstack/react-query";
-import { getAtendimentosPaginated } from "../services/atendimentoService";
-import { getAcompanhamentosPaginated } from "../services/followUpService";
+// src/hooks/useHomePageData.ts
+
+import { useQuery } from "@tanstack/react-query";
+import {
+  getDashboardData,
+  getMonthlyEvolutionData,
+  getStudentStatusData,
+} from "../services/dashboardService";
+import { useAuth } from "../store/auth";
+import type {
+  DashboardData,
+  MonthlyData,
+  StudentStatusData,
+} from "../types/dashboard";
 
 export function useHomePageData() {
-  const [atendimentosPage, setAtendimentosPage] = useState(0);
-  const [acompanhamentosPage, setAcompanhamentosPage] = useState(0);
+  const { session } = useAuth();
 
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ["atendimentos", "dashboard", atendimentosPage],
-        queryFn: () =>
-          getAtendimentosPaginated({
-            page: atendimentosPage,
-            size: 5,
-            sort: "createdAt,desc",
-          }),
-        staleTime: 1000 * 60 * 5, // 5 minutos
-        // Mantém os dados antigos visíveis enquanto os novos são buscados
-        placeholderData: keepPreviousData,
-      },
-      {
-        queryKey: ["acompanhamentos", "dashboard", acompanhamentosPage],
-        queryFn: () =>
-          getAcompanhamentosPaginated({
-            page: acompanhamentosPage,
-            size: 5,
-            sort: "createdAt,desc",
-          }),
-        staleTime: 1000 * 60 * 5,
-        // Mantém os dados antigos visíveis enquanto os novos são buscados
-        placeholderData: keepPreviousData,
-      },
-    ],
+  const {
+    data: dashboardData,
+    isLoading: isLoadingStats,
+    isError: isErrorStats,
+  } = useQuery<DashboardData>({
+    // <-- 2. Add the explicit type here
+    queryKey: ["dashboardStats", session?.role],
+    queryFn: getDashboardData,
   });
 
-  // `isLoading` é true apenas na primeira busca de cada query
-  const isLoading = results.some((query) => query.isLoading);
-  const isError = results.some((query) => query.isError);
-  // `isFetching` é true em toda busca, incluindo as em segundo plano
-  const isFetching = results.some((query) => query.isFetching);
+  const {
+    data: monthlyEvolutionData,
+    isLoading: isLoadingChart,
+    isError: isErrorChart,
+  } = useQuery<MonthlyData[]>({
+    // <-- 3. And here (remember it's an array)
+    queryKey: ["dashboardChart", session?.role],
+    queryFn: getMonthlyEvolutionData,
+  });
 
-  const atendimentosQuery = results[0];
-  const acompanhamentosQuery = results[1];
+  const {
+    data: studentStatusData,
+    isLoading: isLoadingStatusChart,
+    isError: isErrorStatusChart,
+  } = useQuery<StudentStatusData[]>({
+    // <-- 4. And here too
+    queryKey: ["studentStatusChart"],
+    queryFn: getStudentStatusData,
+  });
 
   return {
-    // Dados e controles para Atendimentos
-    atendimentos: atendimentosQuery.data?.content,
-    totalAtendimentos: atendimentosQuery.data?.totalElements ?? 0,
-    atendimentosPageData: atendimentosQuery.data,
-    setAtendimentosPage,
-
-    // Dados e controles para Acompanhamentos
-    acompanhamentos: acompanhamentosQuery.data?.content,
-    totalAcompanhamentos: acompanhamentosQuery.data?.totalElements ?? 0,
-    acompanhamentosPageData: acompanhamentosQuery.data,
-    setAcompanhamentosPage,
-
-    isLoading,
-    isError,
-    isFetching,
+    dashboardData,
+    monthlyEvolutionData,
+    studentStatusData,
+    isLoading: isLoadingStats || isLoadingChart || isLoadingStatusChart,
+    isError: isErrorStats || isErrorChart || isErrorStatusChart,
   };
 }

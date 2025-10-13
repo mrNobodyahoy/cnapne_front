@@ -4,7 +4,7 @@ import type {
   UseFormWatch,
   UseFieldArrayReturn,
 } from "react-hook-form";
-import { calculateAge } from "../lib/utils";
+import { calculateAge } from "../../lib/utils";
 
 type UseMinorLogicParams<TFieldValues extends FieldValues> = {
   watch: UseFormWatch<TFieldValues>;

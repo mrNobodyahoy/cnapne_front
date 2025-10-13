@@ -2,12 +2,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-// 1. Importe o useState
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { createAcompanhamento } from '../../../services/followUpService';
-import { useProfessionalSearch } from '../../../hooks/useProfessionalSearch';
+import { useProfessionalSearch } from '../../../hooks/professional/useProfessionalSearch';
 import type { CreateFollowUp } from '../../../types/followUp';
 
 import Button from '../../ui/Button';
@@ -37,7 +36,6 @@ export default function FollowUpForm({ studentId }: FollowUpFormProps) {
         resolver: zodResolver(createFollowUpSchema)
     });
 
-    // 2. Crie um estado para a key do formulário
     const [formKey, setFormKey] = useState(Date.now());
 
     const { setSearchTerm, searchedProfessionals, isLoading: professionalSearchIsLoading } = useProfessionalSearch();
@@ -46,7 +44,6 @@ export default function FollowUpForm({ studentId }: FollowUpFormProps) {
     const handleCancel = () => {
         reset();
         setSearchTerm('');
-        // 3. Atualize a key para forçar a remontagem do formulário
         setFormKey(Date.now());
     };
 
@@ -55,7 +52,7 @@ export default function FollowUpForm({ studentId }: FollowUpFormProps) {
         onSuccess: () => {
             toast.success('Acompanhamento criado com sucesso!');
             queryClient.invalidateQueries({ queryKey: ['acompanhamentos'] });
-            handleCancel(); // A mágica acontece aqui
+            handleCancel();
         },
         onError: (err: any) => {
             toast.error(`Erro ao criar acompanhamento: ${err.message}`);
@@ -75,7 +72,6 @@ export default function FollowUpForm({ studentId }: FollowUpFormProps) {
     };
 
     return (
-        // 4. Aplique a key ao componente <form>
         <form key={formKey} onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* --- SEÇÃO DE AGENDAMENTO --- */}
             <fieldset className="space-y-4 rounded-lg border border-gray-200 p-6 relative shadow-sm">

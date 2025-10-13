@@ -1,18 +1,22 @@
 // src/components/layout/Sidebar.tsx
 
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Users, BookUser, ShieldCheck, LogOut, LayoutDashboard, FileText, UserCircle, ClipboardList, ClipboardCheck } from "lucide-react";
+import { Home, Users, BookUser, ShieldCheck, LogOut, UserCircle, ClipboardList, ClipboardCheck } from "lucide-react";
 import { logoutRequest } from "../../services/authService";
 import { useAuth, type Role } from "../../store/auth";
 import Button from "../ui/Button";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const { session, clearSession } = useAuth();
+  const queryClient = useQueryClient();
+
 
   const handleLogout = async () => {
     try {
       await logoutRequest();
+      queryClient.clear();
       clearSession();
       navigate("/login");
     } catch (error) {
@@ -26,7 +30,6 @@ export default function Sidebar() {
     const staffLinks = [
       ...baseLinks,
       { to: "/alunos", label: "Alunos", icon: Users },
-      { to: "/professionals", label: "Profissionais", icon: BookUser },
       { to: "/atendimentos", label: "Atendimentos", icon: ClipboardList },
       { to: "/acompanhamentos", label: "Acompanhamentos", icon: ClipboardCheck },
 
@@ -36,6 +39,7 @@ export default function Sidebar() {
       case 'COORDENACAO_CNAPNE':
         return [
           ...staffLinks,
+          { to: "/professionals", label: "Profissionais", icon: BookUser },
           { to: "/admin/config", label: "Admin", icon: ShieldCheck },
         ];
 
@@ -45,10 +49,7 @@ export default function Sidebar() {
 
       case 'ESTUDANTE':
         return [
-          { to: "/dashboard", label: "Meu Painel", icon: LayoutDashboard },
-          { to: "/dashboard/perfil", label: "Meu Perfil", icon: UserCircle },
-          { to: "/dashboard/documentos", label: "Documentos", icon: FileText },];
-
+          { to: "/aluno", label: "Meu Perfil e Histórico", icon: UserCircle },];
       default:
         return baseLinks;
     }

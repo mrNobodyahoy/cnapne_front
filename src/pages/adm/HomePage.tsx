@@ -1,128 +1,57 @@
-import { useHomePageData } from '../../hooks/useHomePageData';
-import StatCard from '../../components/dashboard/StatCard';
-import SessionList from '../../components/dashboard/SessionList';
-import Button from '../../components/ui/Button';
-import { ClipboardList, ClipboardCheck, AlertTriangle, LoaderCircle } from 'lucide-react';
+import { AlertTriangle, LoaderCircle } from "lucide-react";
+import { useHomePageData } from "../../hooks/useHomePageData";
+import { DashboardStats } from "../../components/dashboard/DashboardStats";
+import DashboardChart from "../../components/dashboard/DashboardChart";
+import StudentStatusChart from '../../components/dashboard/StudentStatusChart';
 
 export default function HomePage() {
-  const {
-    atendimentos,
-    totalAtendimentos,
-    atendimentosPageData,
-    setAtendimentosPage,
-    acompanhamentos,
-    totalAcompanhamentos,
-    acompanhamentosPageData,
-    setAcompanhamentosPage,
-    isLoading,
-    isFetching,
-    isError
-  } = useHomePageData();
+    const { dashboardData, monthlyEvolutionData, studentStatusData, isLoading, isError } = useHomePageData();
 
-  if (isLoading && !atendimentosPageData && !acompanhamentosPageData) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />
-        <p className="ml-2 text-gray-600">Carregando painel...</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="text-red-600 flex flex-col items-center gap-4 p-8 bg-red-50 border border-red-200 rounded-xl">
-        <AlertTriangle className="h-10 w-10" />
-        <p className="font-semibold text-xl">Erro ao carregar os dados do painel.</p>
-        <p>Por favor, tente recarregar a página.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800">Painel de Controle</h1>
-        <p className="mt-2 text-gray-600">
-          Visão geral dos atendimentos e acompanhamentos do CNAPNE.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard
-          title="Total de Atendimentos"
-          value={totalAtendimentos}
-          icon={ClipboardList}
-          isLoading={isLoading}
-        />
-        <StatCard
-          title="Total de Acompanhamentos"
-          value={totalAcompanhamentos}
-          icon={ClipboardCheck}
-          isLoading={isLoading}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Bloco de Atendimentos */}
-        <div className={`transition-opacity duration-200 ${isFetching ? 'opacity-60' : 'opacity-100'}`}>
-          <SessionList
-            title="Últimos Atendimentos Registrados"
-            sessions={atendimentos}
-            icon={ClipboardList}
-            isLoading={isLoading}
-            basePath="atendimentos"
-          />
-          {atendimentosPageData && atendimentosPageData.totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <Button
-                onClick={() => setAtendimentosPage(atendimentosPageData.number - 1)}
-                disabled={atendimentosPageData.first}
-              >
-                Anterior
-              </Button>
-              <span className="text-sm text-gray-700">
-                Página {atendimentosPageData.number + 1} de {atendimentosPageData.totalPages}
-              </span>
-              <Button
-                onClick={() => setAtendimentosPage(atendimentosPageData.number + 1)}
-                disabled={atendimentosPageData.last}
-              >
-                Próxima
-              </Button>
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center p-10">
+                <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />
+                <p className="ml-2 text-gray-600">Carregando painel...</p>
             </div>
-          )}
-        </div>
+        );
+    }
 
-        {/* Bloco de Acompanhamentos */}
-        <div className={`transition-opacity duration-200 ${isFetching ? 'opacity-60' : 'opacity-100'}`}>
-          <SessionList
-            title="Últimos Acompanhamentos Registrados"
-            sessions={acompanhamentos}
-            icon={ClipboardCheck}
-            isLoading={isLoading}
-            basePath="acompanhamentos"
-          />
-          {acompanhamentosPageData && acompanhamentosPageData.totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <Button
-                onClick={() => setAcompanhamentosPage(acompanhamentosPageData.number - 1)}
-                disabled={acompanhamentosPageData.first}
-              >
-                Anterior
-              </Button>
-              <span className="text-sm text-gray-700">
-                Página {acompanhamentosPageData.number + 1} de {acompanhamentosPageData.totalPages}
-              </span>
-              <Button
-                onClick={() => setAcompanhamentosPage(acompanhamentosPageData.number + 1)}
-                disabled={acompanhamentosPageData.last}
-              >
-                Próxima
-              </Button>
+    if (isError || !dashboardData || !monthlyEvolutionData || !studentStatusData) {
+        return (
+            <div className="text-red-600 flex flex-col items-center gap-4 p-8 bg-red-50 border-red-200 rounded-xl">
+                <AlertTriangle className="h-10 w-10" />
+                <p className="font-semibold text-xl">Erro ao carregar os dados do painel.</p>
+                <p>Por favor, tente recarregar a página ou contate o suporte.</p>
             </div>
-          )}
+        );
+    }
+
+    const chartData = monthlyEvolutionData.map(item => ({
+        name: item.month,
+        atendimentos: item.atendimentosCount,
+        acompanhamentos: item.acompanhamentosCount,
+    }));
+
+    const studentChartData = studentStatusData.map(item => ({
+        status: item.status,
+        count: item.count,
+    }));
+    return (
+        <div className="p-8 space-y-8">
+            <div>
+                <h1 className="text-2xl font-bold text-gray-900">Painel de Controle</h1>
+                <p className="text-gray-600 mt-1">
+                    Acompanhe os principais indicadores do CNAPNE.
+                </p>
+            </div>
+
+            <DashboardStats data={dashboardData} />
+
+            <div className="grid grid-cols-1 gap-8">
+                <DashboardChart data={chartData} />
+                <StudentStatusChart data={studentChartData} />
+            </div>
+
         </div>
-      </div>
-    </div>
-  );
+    );
 }

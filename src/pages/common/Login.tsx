@@ -36,23 +36,21 @@ export default function Login() {
       setSession(sessionData);
       toast.success('Login realizado com sucesso!');
 
-      const userRole: Role = sessionData.role;
-      if (userRole === 'ESTUDANTE') {
-        navigate("/dashboard");
+      if (sessionData.role === 'ESTUDANTE') {
+        // DE: navigate('/dashboard');
+        // PARA:
+        navigate('/aluno');
       } else {
-        navigate("/");
+        // Redirecionamento para a equipe/coordenação
+        navigate('/');
       }
 
+
     } catch (err: any) {
-
       const status = err?.response?.status;
-      const errorMessage = err?.response?.data?.message;
-
       let finalMessage: string;
 
-      if (status === 403 && errorMessage?.includes("menores de 18 anos")) {
-        finalMessage = errorMessage;
-      } else if (status === 400 || status === 403) {
+      if (status === 400 || status === 403) {
         finalMessage = "Credenciais inválidas.";
       } else {
         finalMessage = "Erro no servidor. Tente novamente mais tarde.";

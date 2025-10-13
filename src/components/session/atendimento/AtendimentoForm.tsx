@@ -12,7 +12,7 @@ import Button from '../../ui/Button';
 import Input from '../../ui/Input';
 import Textarea from '../../ui/Textarea';
 import ProfessionalSelect from '../../professional/ProfessionalSelect';
-import { useProfessionalSearch } from '../../../hooks/useProfessionalSearch';
+import { useProfessionalSearch } from '../../../hooks/professional/useProfessionalSearch';
 
 const createServiceSchema = z.object({
     sessionDate: z.string().min(1, 'Data é obrigatória.'),

@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { getAcompanhamentosPaginated } from "../services/followUpService";
-import type { GetAcompanhamentosParams } from "../types/followUp";
+import { getAtendimentosPaginated } from "../../services/atendimentoService";
+import type { GetAtendimentosParams } from "../../types/atendimento";
+import { useAuth } from "../../store/auth";
 
 interface Filters {
   studentName?: string;
   status?: string;
 }
 
-export function useFollowUpPage(filters: Filters) {
+export function useAtendimentosPage(filters: Filters) {
   const [page, setPage] = useState(0);
   const { studentName, status } = filters;
+  const { session } = useAuth();
 
-  const queryParams: GetAcompanhamentosParams = {
+  const queryParams: GetAtendimentosParams = {
     page,
     size: 10,
     sort: "sessionDate,desc",
@@ -27,8 +29,8 @@ export function useFollowUpPage(filters: Filters) {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["acompanhamentos", queryParams], // A queryKey agora inclui todos os filtros
-    queryFn: () => getAcompanhamentosPaginated(queryParams),
+    queryKey: ["atendimentos", queryParams, session?.role],
+    queryFn: () => getAtendimentosPaginated(queryParams),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60,
   });

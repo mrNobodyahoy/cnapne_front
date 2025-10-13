@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useDebounce } from '../../../hooks/useDebounce'; // Verifique o caminho
-import { useAtendimentosPage } from '../../../hooks/useAtendimentosPage';
+import { useDebounce } from '../../../hooks/util/useDebounce'; // Verifique o caminho
+import { useAtendimentosPage } from '../../../hooks/serviceAtendimento/useAtendimentosPage';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';
 import SessionPageHeader from '../../../components/session/SessionPageHeader';
 import AtendimentoList from '../../../components/session/atendimento/AtendimentoList';

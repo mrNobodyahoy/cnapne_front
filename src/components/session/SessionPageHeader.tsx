@@ -1,6 +1,4 @@
-import { Search, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../ui/Button';
+import { Search } from 'lucide-react';
 import Select from '../ui/Select';
 import { statusOptions } from '../../lib/constants';
 
@@ -8,8 +6,6 @@ import { statusOptions } from '../../lib/constants';
 interface SessionPageHeaderProps {
     title: string;
     subtitle: string;
-    addItemPath: string;
-    addItemLabel: string;
     searchTerm: string;
     onSearchChange: (value: string) => void;
     statusFilter: string;
@@ -19,14 +15,11 @@ interface SessionPageHeaderProps {
 export default function SessionPageHeader({
     title,
     subtitle,
-    addItemPath,
-    addItemLabel,
     searchTerm,
     onSearchChange,
     statusFilter,
     onStatusChange,
 }: SessionPageHeaderProps) {
-    const navigate = useNavigate();
 
     return (
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -56,13 +49,6 @@ export default function SessionPageHeader({
                     value={statusFilter}
                     onChange={(e) => onStatusChange(e.target.value)}
                 />
-
-                <Button
-                    onClick={() => navigate(addItemPath)}
-                    className="flex items-center justify-center gap-2 whitespace-nowrap"
-                >
-                    <Plus className="h-5 w-5" /> {addItemLabel}
-                </Button>
             </div>
         </div>
     );

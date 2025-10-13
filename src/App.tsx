@@ -7,11 +7,22 @@ import { router } from "./router";
 import { Toaster } from 'react-hot-toast';
 
 export default function App() {
-  const { initializeSession } = useAuth();
+  // 1. Pegue também o 'isLoading' do seu hook
+  const { initializeSession, isLoading } = useAuth();
 
   useEffect(() => {
     initializeSession();
   }, [initializeSession]);
+
+  // 2. Adicione a verificação de carregamento inicial AQUI
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        {/* Você pode colocar um spinner/loader mais elaborado aqui se quiser */}
+        <p className="text-lg text-gray-600">Carregando aplicação...</p>
+      </div>
+    );
+  }
 
   return (
     <>

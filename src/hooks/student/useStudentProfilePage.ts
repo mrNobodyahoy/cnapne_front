@@ -1,9 +1,9 @@
 // src/hooks/useStudentProfilePage.ts
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getStudentById, deleteStudent } from "../services/studentService";
-import type { Student } from "../types/student";
+import { getStudentById, deleteStudent } from "../../services/studentService";
+import type { Student } from "../../types/student";
 
 export function useStudentProfilePage() {
   const { studentId } = useParams<{ studentId: string }>();
@@ -43,7 +43,9 @@ export function useStudentProfilePage() {
       deleteMutation.mutate(studentId!);
     }
   };
-
+  const hasResponsibles = useMemo(() => {
+    return !!student?.responsibles && student.responsibles.length > 0;
+  }, [student]);
   return {
     student,
     isLoading,
@@ -54,5 +56,6 @@ export function useStudentProfilePage() {
     closeEditModal: () => setIsEditModalOpen(false),
     handleDelete,
     isDeleting: deleteMutation.isPending,
+    hasResponsibles,
   };
 }

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
 
-import { useMinorLogic } from '../../hooks/useMinorLogic';
+import { useMinorLogic } from '../../hooks/util/useMinorLogic';
 import FormContainer from '../ui/FormContainer';
 
 import type { CreateStudentDTO } from '../../types/student';

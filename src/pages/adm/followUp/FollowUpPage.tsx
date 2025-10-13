@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useDebounce } from '../../../hooks/useDebounce';
-import { useFollowUpPage } from '../../../hooks/useFollowUpPage';
+import { useDebounce } from '../../../hooks/util/useDebounce';
+import { useFollowUpPage } from '../../../hooks/followUp/useFollowUpPage';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';
 import SessionPageHeader from '../../../components/session/SessionPageHeader';
 import FollowUpList from '../../../components/session/followUp/FollowUpList';

@@ -7,8 +7,8 @@ import {
   getDocuments,
   uploadDocument,
   deleteDocument,
-} from "../services/documentService";
-import type { StagedFile } from "../types/document";
+} from "../../services/documentService";
+import type { StagedFile } from "../../types/document";
 
 export function useStudentDocuments(studentId: string) {
   const queryClient = useQueryClient();

@@ -7,11 +7,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
-  const { session, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Carregando sessão...</div>;
-  }
+  const { session } = useAuth();
 
   if (!session) {
     return <Navigate to="/login" replace />;

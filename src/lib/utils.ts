@@ -13,9 +13,16 @@ export const calculateAge = (birthDate: string | Date): number => {
   return age;
 };
 
-/**
- * Função utilitária para mesclar classes do Tailwind CSS de forma condicional e inteligente.
- */
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  return "Ocorreu um erro desconhecido.";
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

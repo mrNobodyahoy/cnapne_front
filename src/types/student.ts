@@ -69,3 +69,14 @@ export interface GetStudentsParams {
   query?: string;
   status?: "ALL" | "ATIVO" | "INATIVO";
 }
+
+export type TimelineItemType = "ATENDIMENTO" | "ACOMPANHAMENTO";
+
+export interface TimelineItem {
+  id: string;
+  type: TimelineItemType;
+  title: string;
+  date: string; // "YYYY-MM-DD"
+  status: string;
+  professionalNames: string[];
+}

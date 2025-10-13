@@ -1,5 +1,5 @@
 import { AlertTriangle, LoaderCircle } from 'lucide-react';
-import { useProfessionalsPage } from '../../../hooks/useProfessionalsPage';
+import { useProfessionalsPage } from '../../../hooks/professional/useProfessionalsPage';
 import Modal from '../../../components/ui/Modal';
 import ProfessionalList from '../../../components/professional/ProfessionalList';
 import ProfessionalForm from '../../../components/professional/ProfessionalForm';

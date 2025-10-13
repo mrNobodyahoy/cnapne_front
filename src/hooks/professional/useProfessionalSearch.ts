@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getProfessionalsPaginated } from "../services/professionalService";
-import { useDebounce } from "./useDebounce";
+import { getProfessionalsPaginated } from "../../services/professionalService";
+import { useDebounce } from "../util/useDebounce";
 
 export function useProfessionalSearch() {
   const [searchTerm, setSearchTerm] = useState("");

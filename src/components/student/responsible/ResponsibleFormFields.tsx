@@ -34,14 +34,14 @@ export default function ResponsibleFormFields({ register, errors, fields, append
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
             <Input
-              id={`responsibles.${index}.completeName`}
-              label={`Nome Completo do Responsável ${index}`}
+              id={`responsibles.completeName`}
+              label={`Nome Completo do Responsável`}
               {...register(`responsibles.${index}.completeName`)}
               error={errors.responsibles?.[index]?.completeName?.message}
             />
             <Input
-              id={`responsibles.${index}.email`}
-              label={`E-mail do Responsável ${index}`}
+              id={`responsibles.email`}
+              label={`E-mail do Responsável `}
               type="email"
               {...register(`responsibles.${index}.email`)}
               error={errors.responsibles?.[index]?.email?.message}
@@ -52,7 +52,7 @@ export default function ResponsibleFormFields({ register, errors, fields, append
               control={control}
               render={({ field }) => (
                 <Input
-                  id={`responsibles.${index}.phone`}
+                  id={`responsibles.phone`}
                   label={`Telefone do Responsável ${index}`}
                   type="tel"
                   placeholder="(99) 99999-9999"

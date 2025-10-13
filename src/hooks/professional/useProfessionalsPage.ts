@@ -8,14 +8,14 @@ import {
 import {
   deleteProfessional,
   getProfessionalsPaginated,
-} from "../services/professionalService";
+} from "../../services/professionalService";
 import type {
   ReadProfessionalDTO,
   Page,
   GetProfessionalsParams,
-} from "../types/professional";
+} from "../../types/professional";
 import { toast } from "react-hot-toast";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "../util/useDebounce";
 
 export function useProfessionalsPage() {
   const queryClient = useQueryClient();

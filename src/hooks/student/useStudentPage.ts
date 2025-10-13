@@ -5,9 +5,9 @@ import {
   useQueryClient,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { deleteStudent, getStudents } from "../services/studentService";
-import type { Page, StudentSummary } from "../types/student";
-import { useDebounce } from "./useDebounce";
+import { deleteStudent, getStudents } from "../../services/studentService";
+import type { Page, StudentSummary } from "../../types/student";
+import { useDebounce } from "../util/useDebounce";
 
 export function useStudentsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
