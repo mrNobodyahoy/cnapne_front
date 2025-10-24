@@ -59,7 +59,6 @@ const ProfileDetails = ({
       </div>
     </div>
 
-    {/* Agora os responsáveis aparecem dentro do Perfil */}
     {student.responsibles && student.responsibles.length > 0 && (
       <>
         <div className="border-t" />

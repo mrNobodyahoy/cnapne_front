@@ -1,13 +1,12 @@
 // src/pages/student/StudentProfileView.tsx
 
 import { formatPhone, formatGender } from '../../lib/formatters';
-import type { Student } from '../../types/student'; // Supondo que você tenha esse tipo
+import type { Student } from '../../types/student';
 import {
   UserCircle, Mail, Phone, Calendar, Users, Hash, CheckCircle,
   BookUser, HeartHandshake, CaseSensitive, PersonStanding
 } from "lucide-react";
 
-// Componentes internos (InfoField, SectionCard) permanecem os mesmos...
 const InfoField = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value?: string }) => (
   <div>
     <div className="flex items-center text-sm text-gray-500"><Icon className="h-4 w-4 mr-2" /><span>{label}</span></div>
@@ -23,7 +22,6 @@ const SectionCard = ({ title, icon: Icon, children }: { title: string, icon: Rea
 );
 
 
-// O componente agora recebe 'student' como prop
 export default function StudentProfileView({ student }: { student: Student }) {
   return (
     <div className="space-y-6">

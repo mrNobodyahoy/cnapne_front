@@ -9,7 +9,6 @@ interface DashboardStatsProps {
 export function DashboardStats({ data }: DashboardStatsProps) {
     return (
         <div className="space-y-8">
-            {/* Seção de Atendimentos */}
             <div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <ClipboardList className="h-6 w-6 text-ifpr-green" />
@@ -43,7 +42,6 @@ export function DashboardStats({ data }: DashboardStatsProps) {
                 </div>
             </div>
 
-            {/* Seção de Acompanhamentos */}
             <div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <ClipboardCheck className="h-6 w-6 text-blue-500" />

@@ -9,7 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { session, clearSession } = useAuth();
+  const { session, clearSession: clearSession } = useAuth();
   const queryClient = useQueryClient();
 
 

@@ -41,3 +41,7 @@ export interface UpdateProfessionalDTO {
   role: string;
   active: boolean;
 }
+export interface PasswordChangeData {
+  currentPassword?: string;
+  newPassword?: string;
+}

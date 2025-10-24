@@ -21,7 +21,6 @@ export function useHomePageData() {
     isLoading: isLoadingStats,
     isError: isErrorStats,
   } = useQuery<DashboardData>({
-    // <-- 2. Add the explicit type here
     queryKey: ["dashboardStats", session?.role],
     queryFn: getDashboardData,
   });
@@ -31,7 +30,6 @@ export function useHomePageData() {
     isLoading: isLoadingChart,
     isError: isErrorChart,
   } = useQuery<MonthlyData[]>({
-    // <-- 3. And here (remember it's an array)
     queryKey: ["dashboardChart", session?.role],
     queryFn: getMonthlyEvolutionData,
   });
@@ -41,7 +39,6 @@ export function useHomePageData() {
     isLoading: isLoadingStatusChart,
     isError: isErrorStatusChart,
   } = useQuery<StudentStatusData[]>({
-    // <-- 4. And here too
     queryKey: ["studentStatusChart"],
     queryFn: getStudentStatusData,
   });

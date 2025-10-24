@@ -32,23 +32,18 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
       <ul className="divide-y divide-gray-200">
         {professionals.map((professional) => (
           <li key={professional.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors text-sm">
-            {/* Coluna 1: Nome */}
             <div className="col-span-3 font-medium text-gray-900 truncate" title={professional.fullName}>
               {professional.fullName}
             </div>
-            {/* Coluna 2: E-mail */}
             <div className="col-span-3 text-gray-600 truncate" title={professional.email}>
               {professional.email}
             </div>
-            {/* Coluna 3: Função */}
             <div className="col-span-2 text-gray-600 truncate" title={professional.role}>
               {professional.role}
             </div>
-            {/* Coluna 4: Especialidade */}
             <div className="col-span-2 text-gray-600 truncate" title={professional.specialty}>
               {professional.specialty}
             </div>
-            {/* Coluna 5: Status */}
             <div className="col-span-1 flex justify-center">
               <span className={`text-xs font-semibold px-3 py-1 rounded-full ${professional.active
                 ? 'bg-green-100 text-green-700'
@@ -57,7 +52,6 @@ export default function ProfessionalList({ professionals, onEdit, onDelete, dele
                 {professional.active ? 'ATIVO' : 'INATIVO'}
               </span>
             </div>
-            {/* Coluna 6: Ações */}
             <div className="col-span-1 flex items-center justify-center gap-2">
               <button
                 onClick={() => onEdit(professional)}

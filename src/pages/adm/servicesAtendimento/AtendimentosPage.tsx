@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDebounce } from '../../../hooks/util/useDebounce'; // Verifique o caminho
+import { useDebounce } from '../../../hooks/util/useDebounce';
 import { useAtendimentosPage } from '../../../hooks/serviceAtendimento/useAtendimentosPage';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';
 import SessionPageHeader from '../../../components/session/SessionPageHeader';

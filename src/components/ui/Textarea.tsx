@@ -1,5 +1,5 @@
 import { forwardRef, type TextareaHTMLAttributes } from 'react';
-import { cn } from '../../lib/utils'; // 1. Importe a função 'cn'
+import { cn } from '../../lib/utils';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     id: string;
@@ -19,6 +19,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                     <textarea
                         id={id}
                         ref={ref}
+                        spellCheck={false}
                         rows={4}
                         className={cn(
                             "block w-full rounded-md border-gray-300 shadow-sm focus:border-ifpr-green focus:ring-ifpr-green sm:text-sm", // Estilos base

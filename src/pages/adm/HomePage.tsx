@@ -9,7 +9,7 @@ export default function HomePage() {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center p-10">
+            <div className="flex items-center justify-center p-10 h-full">
                 <LoaderCircle className="h-8 w-8 animate-spin text-ifpr-green" />
                 <p className="ml-2 text-gray-600">Carregando painel...</p>
             </div>
@@ -18,7 +18,7 @@ export default function HomePage() {
 
     if (isError || !dashboardData || !monthlyEvolutionData || !studentStatusData) {
         return (
-            <div className="text-red-600 flex flex-col items-center gap-4 p-8 bg-red-50 border-red-200 rounded-xl">
+            <div className="text-red-600 flex flex-col items-center justify-center gap-4 p-8 bg-red-50 border-red-200 rounded-xl h-full">
                 <AlertTriangle className="h-10 w-10" />
                 <p className="font-semibold text-xl">Erro ao carregar os dados do painel.</p>
                 <p>Por favor, tente recarregar a página ou contate o suporte.</p>
@@ -36,6 +36,7 @@ export default function HomePage() {
         status: item.status,
         count: item.count,
     }));
+
     return (
         <div className="p-8 space-y-8">
             <div>
@@ -51,7 +52,6 @@ export default function HomePage() {
                 <DashboardChart data={chartData} />
                 <StudentStatusChart data={studentChartData} />
             </div>
-
         </div>
     );
 }

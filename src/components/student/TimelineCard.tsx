@@ -29,7 +29,6 @@ export default function TimelineCard({ item }: TimelineCardProps) {
 
     return (
         <div
-            // 4. Navega para o caminho correto
             onClick={() => navigate(`${basePath}/${item.id}`)}
             className="group flex gap-4 rounded-xl border bg-white shadow-sm cursor-pointer hover:border-ifpr-green hover:shadow-lg transition-all duration-200"
         >

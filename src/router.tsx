@@ -21,10 +21,14 @@ import EditAtendimentoPage from "./pages/adm/servicesAtendimento/EditAtendimento
 // Páginas do Estudante
 import StudentHomePage from "./pages/student/StudentHomePage";
 
+import ResetPassword from "./pages/common/ResetPassword";
+
+
 const AdminConfigPage = () => <h1 className="text-3xl font-bold">Página de Admin</h1>;
 
 const routes = [
   { path: "/login", element: <Login /> },
+  { path: "/resetar-senha", element: <ResetPassword /> },
   { path: "/unauthorized", element: <h1>Acesso Não Autorizado</h1> },
   {
     // PAINEL ADMINISTRATIVO

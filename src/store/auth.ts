@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { me } from "../services/authService";
+import { me, logoutRequest } from "../services/authService";
 
 export type Role =
   | "COORDENACAO_CNAPNE"
@@ -21,15 +21,33 @@ interface AuthState {
   initializeSession: () => Promise<void>;
 }
 
-export const useAuth = create<AuthState>((set) => ({
+export const useAuth = create<AuthState>((set, get) => ({
   session: null,
   isLoading: true,
 
   setSession: (session) => set({ session, isLoading: false }),
+  logout: async () => {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error(
+        "Falha na chamada de logout da API, limpando localmente.",
+        error
+      );
+    } finally {
+      set({ session: null, isLoading: false });
+    }
+  },
 
-  clearSession: () => set({ session: null, isLoading: false }),
+  clearSession: () => {
+    set({ session: null, isLoading: false });
+  },
 
   initializeSession: async () => {
+    if (get().session) {
+      set({ isLoading: false });
+      return;
+    }
     try {
       const sessionData = await me();
       set({ session: sessionData, isLoading: false });

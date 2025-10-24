@@ -7,6 +7,7 @@ import type {
   UpdateProfessionalDTO,
   Page,
   GetProfessionalsParams,
+  PasswordChangeData,
 } from "../types/professional";
 
 export async function getProfessionalsPaginated(
@@ -37,6 +38,15 @@ export async function updateProfessional(
     payload
   );
   return data;
+}
+
+export async function getMyProfile(): Promise<ReadProfessionalDTO> {
+  const { data } = await api.get<ReadProfessionalDTO>("/professionals/me");
+  return data;
+}
+
+export async function changeMyPassword(data: PasswordChangeData) {
+  await api.put("/professionals/me/change-password", data);
 }
 
 export async function deleteProfessional(id: string): Promise<void> {

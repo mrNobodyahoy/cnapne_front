@@ -16,6 +16,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({ label, error, id, className
       <input
         id={id}
         ref={ref}
+        spellCheck={false}
         className={cn(
           'w-full rounded-lg border bg-gray-50 p-2.5 text-gray-800 shadow-sm transition-colors',
           'focus:outline-none focus:ring-2 focus:ring-ifpr-green focus:border-ifpr-green',
