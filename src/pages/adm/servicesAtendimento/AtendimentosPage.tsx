@@ -5,10 +5,16 @@ import { LoaderCircle, AlertTriangle } from 'lucide-react';
 import SessionPageHeader from '../../../components/session/SessionPageHeader';
 import AtendimentoList from '../../../components/session/atendimento/AtendimentoList';
 import Pagination from '../../../components/ui/Pagination';
+import { useSearchParams } from 'react-router-dom';
+import { statusOptions } from '../../../lib/constants';
+
 
 export default function AtendimentosPage() {
+    const [searchParams] = useSearchParams();
+    const initialStatus = searchParams.get('status') || '';
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState(initialStatus);
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
     const {
@@ -43,6 +49,9 @@ export default function AtendimentosPage() {
                 onSearchChange={setSearchTerm}
                 statusFilter={statusFilter}
                 onStatusChange={setStatusFilter}
+
+
+                statusOptions={statusOptions}
             />
 
             <div className={`transition-opacity duration-300 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>

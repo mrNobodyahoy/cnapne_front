@@ -1,14 +1,23 @@
+// src/components/professional/ProfileEditForm.tsx
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { changeMyPassword } from '../../services/professionalService';
-import { updateProfessional } from '../../services/professionalService';
+import { changeMyPassword, updateProfessional } from '../../services/professionalService';
 import type { UpdateProfessionalDTO } from '../../types/professional';
-import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { useUserProfile } from '../../hooks/professional/useUserProfile';
-import Select from '../ui/Select';
-import { specialtyOptions } from './ProfessionalOptions';
 import { useForm, Controller } from 'react-hook-form';
 
+// 1. Importe os ícones
+import { User, AtSign, Briefcase, LoaderCircle } from 'lucide-react';
+
+// 2. Importe seus componentes de UI padronizados
+import Button from '../ui/Button';
+import Select from '../ui/Select';
+import Input from '../ui/Input';
+import IconInput from '../ui/IconInput';
+import PasswordInput from '../ui/PasswordInput';
+import { specialtyOptions } from './ProfessionalOptions';
 
 interface ProfileEditFormProps {
     onClose: () => void;
@@ -19,13 +28,12 @@ type FormData = UpdateProfessionalDTO & {
     newPassword?: string;
 };
 
+
 export function ProfileEditForm({ onClose }: ProfileEditFormProps) {
     const queryClient = useQueryClient();
     const { data: profile, isLoading, isError } = useUserProfile();
 
-    const [view, setView] = useState<'profile' | 'password'>('profile');
-    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
 
 
     const { register, handleSubmit, formState: { errors }, reset, control } = useForm<FormData>({
@@ -34,27 +42,28 @@ export function ProfileEditForm({ onClose }: ProfileEditFormProps) {
 
     useEffect(() => {
         if (profile) {
-            const profileData = {
-                ...profile,
-                specialty: profile.specialty || '',
-            };
-            reset(profileData);
+            reset({ ...profile, specialty: profile.specialty || '' });
         }
     }, [profile, reset]);
 
     const { mutate: updateProfileMutation, isPending: isUpdating } = useMutation({
         mutationFn: (data: UpdateProfessionalDTO) => updateProfessional(profile!.id, data),
         onSuccess: () => {
-            alert('Perfil atualizado com sucesso!');
+            toast.success('Perfil atualizado com sucesso!');
             queryClient.invalidateQueries({ queryKey: ['userProfile'] });
             onClose();
         },
-        onError: (err) => alert(`Erro: ${err.message}`),
+        onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`),
     });
 
     const { mutate: changePasswordMutation, isPending: isChangingPassword } = useMutation({
         mutationFn: changeMyPassword,
-        onError: () => alert('Erro ao alterar a senha. Verifique a senha atual.'),
+        onSuccess: () => {
+            toast.success('Senha alterada com sucesso!');
+            setActiveTab('profile');
+            reset({ ...profile, currentPassword: '', newPassword: '' });
+        },
+        onError: () => toast.error('Erro ao alterar a senha. Verifique a senha atual.'),
     });
 
     const onPasswordSubmit = handleSubmit((data) => {
@@ -62,15 +71,7 @@ export function ProfileEditForm({ onClose }: ProfileEditFormProps) {
             changePasswordMutation({
                 newPassword: data.newPassword,
                 currentPassword: data.currentPassword,
-            }, {
-                onSuccess: () => {
-                    alert('Senha alterada com sucesso!');
-                    setView('profile');
-                    reset({ ...profile, currentPassword: '', newPassword: '' });
-                }
             });
-        } else {
-            alert("Por favor, preencha a senha atual e a nova senha.");
         }
     });
 
@@ -82,122 +83,129 @@ export function ProfileEditForm({ onClose }: ProfileEditFormProps) {
         return (
             <div className="flex justify-center items-center p-8 min-h-[300px]">
                 <LoaderCircle className="animate-spin h-8 w-8 text-ifpr-green" />
-                <span className="ml-2">Carregando dados...</span>
+                <span className="ml-3 text-gray-600">Carregando dados do perfil...</span>
             </div>
         );
     }
 
     if (isError || !profile) {
         return (
-            <div className="p-4 text-center text-red-600 min-h-[300px]">
-                <p className="font-semibold">Falha ao carregar seus dados.</p>
-                <p className="text-sm">Por favor, feche e tente novamente.</p>
+            <div className="p-8 text-center text-red-600 min-h-[300px]">
+                <p className="font-semibold text-lg">Falha ao carregar seus dados.</p>
+                <p className="text-sm text-gray-600 mt-2">Por favor, feche o modal e tente novamente.</p>
             </div>
         );
     }
 
+    // Helper para classes de Aba
+    const getTabClassName = (tabName: 'profile' | 'password') => {
+        const base = "px-4 py-2 font-medium text-sm rounded-t-md cursor-pointer";
+        if (activeTab === tabName) {
+            return `${base} border-b-2 border-blue-600 text-blue-600`;
+        }
+        return `${base} text-gray-500 hover:text-gray-800`;
+    };
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
+            {/* 5. Navegação das Abas (continua igual) */}
+            <div className="border-b border-gray-200">
+                <nav className="flex space-x-2">
+                    <button type="button" className={getTabClassName('profile')} onClick={() => setActiveTab('profile')}>
+                        Dados Pessoais
+                    </button>
+                    <button type="button" className={getTabClassName('password')} onClick={() => setActiveTab('password')}>
+                        Alterar Senha
+                    </button>
+                </nav>
+            </div>
 
-            {view === 'profile' && (
-                <form onSubmit={onProfileSubmit} className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-800">Dados Pessoais</h3>
-
-                    <div>
-                        <label className="label-style">E-mail</label>
-                        <input {...register('email')} className="input-style bg-gray-100" readOnly disabled autoComplete='username' />
-                    </div>
-
-                    <div>
-                        <label htmlFor="fullName" className="label-style">Nome Completo</label>
-                        <input id="fullName" {...register('fullName', { required: 'Nome é obrigatório' })} className="input-style" />
-                        {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
-                    </div>
-
-
-                    <Controller
-                        name="specialty"
-                        control={control}
-                        rules={{ required: 'Especialidade é obrigatória' }}
-                        render={({ field }) => (
-                            <Select
-                                id="specialty"
-                                label="Especialidade"
-                                options={specialtyOptions}
-                                placeholder="Selecione sua especialidade"
-                                error={errors.specialty?.message}
-                                {...field}
-                            />
-                        )}
+            {/* 6. Conteúdo da Aba de Perfil (Agora COMPONENTIZADO) */}
+            {activeTab === 'profile' && (
+                <form onSubmit={onProfileSubmit} className="space-y-4 pt-2">
+                    <IconInput
+                        id="email"
+                        label="E-mail"
+                        icon={AtSign}
+                        {...register('email')}
+                        readOnly
+                        disabled
+                        className="bg-gray-100"
                     />
 
-                    <div>
-                        <label className="label-style">Função</label>
-                        <input value={profile.role.replace(/_/g, " ")} className="input-style bg-gray-100" readOnly disabled />
+                    <IconInput
+                        id="fullName"
+                        label="Nome Completo"
+                        icon={User}
+                        {...register('fullName', { required: 'Nome é obrigatório' })}
+                        error={errors.fullName?.message}
+                    />
+
+                    {/* Wrapper para o ícone do Select */}
+                    <div className="relative">
+                        <span className="absolute top-9 left-0 flex items-center pl-3.5 z-10">
+                            <Briefcase className="h-5 w-5 text-gray-400" />
+                        </span>
+                        <Controller
+                            name="specialty"
+                            control={control}
+                            rules={{ required: 'Especialidade é obrigatória' }}
+                            render={({ field }) => (
+                                <Select
+                                    id="specialty"
+                                    label="Especialidade"
+                                    options={specialtyOptions}
+                                    placeholder="Selecione sua especialidade"
+                                    error={errors.specialty?.message}
+                                    {...field}
+                                    className="pl-10" // Seu Select.tsx aceita 'className'
+                                />
+                            )}
+                        />
                     </div>
 
-                    <div className="flex flex-col items-center gap-3 pt-4">
-                        <button type="submit" disabled={isUpdating} className="btn-primary">
-                            {isUpdating ? 'Salvando...' : 'Salvar Alterações'}
-                        </button>
+                    <Input
+                        id="role"
+                        label="Função"
+                        value={profile?.role.replace(/_/g, " ") || ''}
+                        readOnly
+                        disabled
+                        className="bg-gray-100"
+                    />
 
-                        <button
-                            type="button"
-                            onClick={() => setView('password')}
-                            className="btn-blue"
-                        >
-                            Alterar Senha
-                        </button>
+                    {/* 7. Botão de Ação Alinhado (usando seu componente Button) */}
+                    <div className="flex justify-end pt-4 mt-4 border-t">
+                        <Button type="submit" loading={isUpdating}>
+                            {isUpdating ? 'Salvando...' : 'Salvar Alterações'}
+                        </Button>
                     </div>
                 </form>
             )}
 
-            {view === 'password' && (
-                <form onSubmit={onPasswordSubmit} className="space-y-4" autoComplete="off">
-                    <h3 className="text-lg font-semibold text-gray-800">Alterar Senha</h3>
+            {/* 8. Conteúdo da Aba de Senha (Agora COMPONENTIZADO) */}
+            {activeTab === 'password' && (
+                <form onSubmit={onPasswordSubmit} className="space-y-4 pt-2" autoComplete="off">
+                    <PasswordInput
+                        id="currentPassword"
+                        label="Senha Atual"
+                        autoComplete="current-password"
+                        {...register('currentPassword', { required: 'Senha atual é obrigatória' })}
+                        error={errors.currentPassword?.message}
+                    />
 
-                    <div className="relative">
-                        <label htmlFor="currentPassword" className="label-style">Senha Atual</label>
-                        <input
-                            id="currentPassword"
-                            type={showCurrentPassword ? "text" : "password"}
-                            {...register('currentPassword', { required: 'Senha atual é obrigatória' })}
-                            className="input-style pr-10"
-                            autoComplete="current-password"
-                        />
-                        <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="absolute inset-y-0 right-0 top-6 flex items-center pr-3 text-gray-500">
-                            {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </button>
-                        {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword.message}</p>}
-                    </div>
+                    <PasswordInput
+                        id="newPassword"
+                        label="Nova Senha"
+                        autoComplete="new-password"
+                        {...register('newPassword', { required: 'Nova senha é obrigatória' })}
+                        error={errors.newPassword?.message}
+                    />
 
-                    <div className="relative">
-                        <label htmlFor="newPassword" className="label-style">Nova Senha</label>
-                        <input
-                            id="newPassword"
-                            type={showNewPassword ? "text" : "password"}
-                            {...register('newPassword', { required: 'Nova senha é obrigatória' })}
-                            className="input-style pr-10"
-                            autoComplete="new-password"
-                        />
-                        <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute inset-y-0 right-0 top-6 flex items-center pr-3 text-gray-500">
-                            {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </button>
-                        {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>}
-                    </div>
-
-                    <div className="flex flex-col items-start gap-4 pt-4">
-                        <button type="submit" disabled={isChangingPassword} className="btn-primary">
+                    {/* Botão de Ação Alinhado (usando seu componente Button) */}
+                    <div className="flex justify-end pt-4 mt-4 border-t">
+                        <Button type="submit" loading={isChangingPassword}>
                             {isChangingPassword ? 'Alterando...' : 'Alterar Senha'}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => setView('profile')}
-                            className="text-gray-600 hover:underline text-sm font-medium transition-colors"
-                        >
-                            Voltar
-                        </button>
+                        </Button>
                     </div>
                 </form>
             )}

@@ -87,7 +87,7 @@ export default function ProfessionalFormFields<TFieldValues extends FieldValues>
               <ToggleSwitch
                 id="active"
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onChange={field.onChange}
               />
             )}
           />

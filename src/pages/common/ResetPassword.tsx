@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPasswordRequest } from "../../services/authService";
-import Input from "../../components/ui/Input";
+import PasswordInput from "../../components/ui/PasswordInput";
 import Button from "../../components/ui/Button";
 import AuthCard from "../../components/auth/AuthCard";
 import { toast } from "react-hot-toast";
@@ -75,7 +75,7 @@ export default function ResetPassword() {
                     Redefinir Senha
                 </h1>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <Input
+                    <PasswordInput
                         id="password"
                         type="password"
                         placeholder="••••••••"
@@ -83,7 +83,7 @@ export default function ResetPassword() {
                         {...register("password")}
                         error={errors.password?.message}
                     />
-                    <Input
+                    <PasswordInput
                         id="passwordConfirmation"
                         type="password"
                         placeholder="••••••••"

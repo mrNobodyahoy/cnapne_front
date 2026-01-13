@@ -1,5 +1,6 @@
 import type { ReadProfessionalDTO } from "./professional";
 import type { StudentSummary } from "./student";
+import type { ReadTeacherGuidance } from "./teacherGuidance";
 
 export interface ReadFollowUp {
   sessionId: string;
@@ -14,6 +15,7 @@ export interface ReadFollowUp {
   nextSteps: string;
   student: StudentSummary;
   professionals: ReadProfessionalDTO[];
+  teacherGuidance: ReadTeacherGuidance | null;
 }
 
 export interface CreateFollowUp {

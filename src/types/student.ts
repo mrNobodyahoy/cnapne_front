@@ -70,13 +70,24 @@ export interface GetStudentsParams {
   status?: "ALL" | "ATIVO" | "INATIVO";
 }
 
-export type TimelineItemType = "ATENDIMENTO" | "ACOMPANHAMENTO";
-
-export interface TimelineItem {
+export interface ServiceMonitoringItem {
   id: string;
-  type: TimelineItemType;
   title: string;
-  date: string; // "YYYY-MM-DD"
+  date: string;
   status: string;
   professionalNames: string[];
 }
+
+export interface GuidanceItem {
+  id: string;
+  guidanceDetails: string;
+  date: string;
+  status: string;
+  authorName: string;
+  serviceId: string | null;
+  followUpId: string | null;
+}
+
+export type TimelineItem =
+  | ({ type: "ATENDIMENTO" | "ACOMPANHAMENTO" } & ServiceMonitoringItem)
+  | ({ type: "ORIENTACAO" } & GuidanceItem);

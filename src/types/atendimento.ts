@@ -1,5 +1,6 @@
 import type { ReadProfessionalDTO } from "./professional";
 import type { StudentSummary } from "./student";
+import type { ReadTeacherGuidance } from "./teacherGuidance";
 
 export interface ReadService {
   sessionId: string;
@@ -15,6 +16,7 @@ export interface ReadService {
   results: string;
   student: StudentSummary;
   professionals: ReadProfessionalDTO[];
+  teacherGuidance: ReadTeacherGuidance | null;
 }
 
 export interface CreateService {

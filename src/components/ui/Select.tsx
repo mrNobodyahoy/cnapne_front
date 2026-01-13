@@ -3,7 +3,7 @@ import { forwardRef, type ComponentProps } from 'react';
 import { ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 
-type Option = {
+export type Option = {
   value: string;
   label: string;
 };

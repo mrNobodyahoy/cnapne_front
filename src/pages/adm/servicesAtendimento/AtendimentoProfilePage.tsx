@@ -1,14 +1,21 @@
+// src/pages/atendimentos/AtendimentoProfilePage.tsx
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getAtendimentoById, deleteAtendimento } from '../../../services/atendimentoService';
 import {
     LoaderCircle, AlertTriangle, ArrowLeft, Edit, Trash, Calendar, Clock, MapPin,
-    User, Users, FileText, CheckCircle, Target, Award, GraduationCap, Hash
+    User, Users, FileText, CheckCircle, Target, Award, GraduationCap, Hash, ClipboardPenLine,
+    FileDown
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import Modal from '../../../components/ui/Modal';
+import TeacherGuidanceForm from '../../../components/session/teacherGuidance/TeacherGuidanceForm';
+import TeacherGuidanceDetails from '../../../components/session/teacherGuidance/TeacherGuidanceDetails';
+import { generateGuidancePdf } from '../../../lib/pdfGenerator';
 
 interface InfoFieldProps {
     icon: any;
@@ -16,7 +23,6 @@ interface InfoFieldProps {
     value: string | undefined | null;
     className?: string;
 }
-
 const InfoField = ({ icon: Icon, label, value, className = '' }: InfoFieldProps) => (
     <div className={className}>
         <div className="flex items-center text-sm font-medium text-gray-500">
@@ -27,10 +33,15 @@ const InfoField = ({ icon: Icon, label, value, className = '' }: InfoFieldProps)
     </div>
 );
 
+
 export default function AtendimentoProfilePage() {
     const { atendimentoId } = useParams<{ atendimentoId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    const [isGuidanceModalOpen, setIsGuidanceModalOpen] = useState(false);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const { data: atendimento, isLoading, isError } = useQuery({
         queryKey: ['atendimento', atendimentoId],
@@ -52,6 +63,17 @@ export default function AtendimentoProfilePage() {
         if (window.confirm('Tem certeza que deseja deletar este atendimento? Esta ação não pode ser desfeita.')) {
             deleteMutation.mutate();
         }
+    };
+
+    const handlePdfDownload = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (atendimento?.teacherGuidance) {
+            generateGuidancePdf(atendimento.teacherGuidance);
+        }
+    };
+    const handleOpenEditModal = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsEditModalOpen(true);
     };
 
     if (isLoading) {
@@ -76,6 +98,17 @@ export default function AtendimentoProfilePage() {
                     <p className="mt-1 text-lg text-gray-600">Detalhes do Atendimento</p>
                 </div>
                 <div className="flex gap-2">
+                    {!atendimento.teacherGuidance ? (
+                        <Button
+                            onClick={() => setIsGuidanceModalOpen(true)}
+                            variant="info"
+                            title="Criar Orientação Pedagógica"
+                            className="flex items-center gap-2"
+                        >
+                            <ClipboardPenLine className="h-4 w-4" />
+                            <span>Criar Orientação</span>
+                        </Button>
+                    ) : null}
                     <Button onClick={() => navigate(`/atendimentos/${atendimentoId}/edit`)} variant="outline" title="Editar">
                         <Edit className="h-4 w-4" />
                     </Button>
@@ -86,7 +119,7 @@ export default function AtendimentoProfilePage() {
             </div>
 
             <div className="space-y-6">
-                {/* Card do Aluno Clicável */}
+
                 <Link
                     to={`/alunos/${atendimento.student.id}`}
                     className="block bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-ifpr-green hover:bg-green-50 transition-all duration-200"
@@ -104,8 +137,8 @@ export default function AtendimentoProfilePage() {
                     </div>
                 </Link>
 
-                {/* Sessão */}
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
+                    {/* ... (conteúdo card sessão) ... */}
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Detalhes da Sessão</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <InfoField icon={Calendar} label="Data" value={format(parseISO(atendimento.sessionDate), "dd/MM/yyyy", { locale: ptBR })} />
@@ -115,7 +148,9 @@ export default function AtendimentoProfilePage() {
                     </div>
                 </div>
 
+                {/* Registros do Atendimento */}
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
+                    {/* ... (conteúdo card registros) ... */}
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Registros do Atendimento</h2>
                     <div className="space-y-6">
                         <InfoField icon={FileText} label="Descrição" value={atendimento.descriptionService} />
@@ -125,6 +160,58 @@ export default function AtendimentoProfilePage() {
                     </div>
                 </div>
 
+                {atendimento.teacherGuidance && (
+                    <div
+                        onClick={() => setIsDetailsModalOpen(true)}
+                        className="relative block bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-ifpr-green transition-all duration-200 cursor-pointer group"
+                        title="Clique para ver os detalhes da Orientação"
+                    >
+                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <Button
+                                onClick={handleOpenEditModal}
+                                variant="outline"
+                                className="p-2 h-auto"
+                                title="Editar Orientação"
+                            >
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                            {/* Botão PDF */}
+                            <Button
+                                onClick={handlePdfDownload}
+                                variant="outline"
+                                className="p-2 h-auto"
+                                title="Gerar PDF"
+                            >
+                                <FileDown className="h-4 w-4" />
+                            </Button>
+                        </div>
+
+                        {/* Conteúdo do Card */}
+                        <div className="flex items-center border-b pb-3 mb-4">
+                            <ClipboardPenLine className="h-6 w-6 text-ifpr-green mr-3" />
+                            <h2 className="text-xl font-bold text-gray-800">Orientação Pedagógica Vinculada</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <InfoField
+                                icon={User}
+                                label="Autor(a)"
+                                value={atendimento.teacherGuidance.author.fullName}
+                            />
+                            <InfoField
+                                icon={MapPin}
+                                label="Local"
+                                value={atendimento.teacherGuidance.domiciliar ? 'Domiciliar' : 'Sala de Aula'}
+                            />
+                            <InfoField
+                                icon={Calendar}
+                                label="Data"
+                                value={format(parseISO(atendimento.teacherGuidance.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* Profissionais Envolvidos */}
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Profissionais Envolvidos</h2>
                     <ul className="space-y-3">
@@ -140,6 +227,32 @@ export default function AtendimentoProfilePage() {
                     </ul>
                 </div>
             </div>
+
+            {/* --- MODAIS --- */}
+            {atendimento.teacherGuidance && (
+                <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+                    <TeacherGuidanceForm
+                        existingGuidance={atendimento.teacherGuidance}
+                        followUpId={atendimentoId} // Para invalidar a query
+                        onClose={() => setIsEditModalOpen(false)}
+                    />
+                </Modal>
+            )}
+
+            {/* Modal de CRIAÇÃO */}
+            <Modal isOpen={isGuidanceModalOpen} onClose={() => setIsGuidanceModalOpen(false)}>
+                <TeacherGuidanceForm
+                    serviceId={atendimentoId}
+                    onClose={() => setIsGuidanceModalOpen(false)}
+                />
+            </Modal>
+
+            {atendimento.teacherGuidance && (
+                <Modal isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)}>
+                    <TeacherGuidanceDetails guidance={atendimento.teacherGuidance} />
+                </Modal>
+            )}
+
         </div>
     );
 }

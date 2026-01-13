@@ -17,6 +17,7 @@ import AtendimentoProfilePage from "./pages/adm/servicesAtendimento/AtendimentoP
 import FollowUpProfilePage from "./pages/adm/followUp/FollowUpProfilePage";
 import EditFollowUpPage from "./pages/adm/followUp/EditFollowUpPage";
 import EditAtendimentoPage from "./pages/adm/servicesAtendimento/EditAtendimentoPage";
+import TeacherGuidanceListPage from "./pages/adm/teacherGuidance/TeacherGuidanceListPage";
 
 // Páginas do Estudante
 import StudentHomePage from "./pages/student/StudentHomePage";
@@ -46,12 +47,10 @@ const routes = [
         path: "/",
         element: <AppLayout />,
         children: [
-          // CORREÇÃO: Usando path: "" para consistência
           { path: "", element: <HomePage /> },
           {
             path: "alunos",
             children: [
-              // CORREÇÃO: Usando path: "" para consistência
               { path: "", element: <AlunosPage /> },
               { path: ":studentId", element: <StudentProfilePage /> },
               { path: ":studentId/novo-atendimento", element: <NewAtendimentoPage /> },
@@ -62,22 +61,23 @@ const routes = [
           {
             path: "atendimentos",
             children: [
-              // CORREÇÃO: Usando path: "" para consistência
               { path: "", element: <AtendimentosPage /> },
               { path: ":atendimentoId", element: <AtendimentoProfilePage /> },
               { path: ":atendimentoId/edit", element: <EditAtendimentoPage /> },
             ],
           },
           {
+            path: "orientacoes",
+            element: <TeacherGuidanceListPage />
+          },
+          {
             path: "acompanhamentos",
             children: [
-              // CORREÇÃO: Usando path: "" para consistência
               { path: "", element: <FollowUpPage /> },
               { path: ":acompanhamentoId", element: <FollowUpProfilePage /> },
               { path: ":acompanhamentoId/edit", element: <EditFollowUpPage /> },
             ],
           },
-          // CORREÇÃO: Rotas duplicadas removidas daqui
           { path: "admin/config", element: <AdminConfigPage /> },
         ],
       },

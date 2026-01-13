@@ -1,7 +1,7 @@
 // src/components/layout/Sidebar.tsx
 
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Users, BookUser, ShieldCheck, LogOut, UserCircle, ClipboardList, ClipboardCheck } from "lucide-react";
+import { Home, Users, BookUser, ShieldCheck, LogOut, UserCircle, ClipboardList, ClipboardCheck, ClipboardPenLine } from "lucide-react";
 import { logoutRequest } from "../../services/authService";
 import { useAuth, type Role } from "../../store/auth";
 import Button from "../ui/Button";
@@ -9,7 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { session, clearSession: clearSession } = useAuth();
+  const { session, clearSession } = useAuth();
   const queryClient = useQueryClient();
 
 
@@ -32,6 +32,7 @@ export default function Sidebar() {
       { to: "/alunos", label: "Alunos", icon: Users },
       { to: "/atendimentos", label: "Atendimentos", icon: ClipboardList },
       { to: "/acompanhamentos", label: "Acompanhamentos", icon: ClipboardCheck },
+      { to: "/orientacoes", label: "Orientações", icon: ClipboardPenLine },
 
     ];
 
@@ -80,7 +81,12 @@ export default function Sidebar() {
             {session?.email}
           </p>
         </div>
-        <Button onClick={handleLogout} className="flex w-full items-center rounded-md px-4 py-3 text-gray-700 transition hover:bg-red-50 hover:text-red-600">
+        <Button
+          onClick={handleLogout}
+          // 👇 Ajuste nas classes para remover padding interno e aplicar no Button
+          className="w-full justify-start text-left text-gray-700 hover:bg-red-50 hover:text-red-600"
+          variant="secondary" // Usar uma variante neutra ou criar uma específica
+        >
           <LogOut className="mr-3 h-5 w-5" />
           Sair
         </Button>

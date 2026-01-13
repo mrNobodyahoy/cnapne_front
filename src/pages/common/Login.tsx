@@ -12,7 +12,7 @@ import Button from "../../components/ui/Button";
 import AuthCard from "../../components/auth/AuthCard";
 import logoIfpr from '../../assets/if-vertical.png';
 import { toast } from 'react-hot-toast';
-import { Globe, Phone } from "lucide-react";
+import { Globe, Mail } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 
 const loginSchema = z.object({
@@ -124,13 +124,11 @@ export default function Login() {
               <span>Site IFPR</span>
             </a>
             <a
-              href="https://api.whatsapp.com/send/?text=CNAPNE+https%3A%2F%2Fifpr.edu.br%2Firati%2Fcnapne%2F&type=custom_url&app_absent=0"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:cnapne.irati@ifpr.edu.br"
               className="flex items-center gap-2 hover:text-green-700 transition-colors"
             >
-              <Phone size={18} />
-              <span>WhatsApp</span>
+              <Mail size={18} />
+              <span>cnapne.irati@ifpr.edu.br</span>
             </a>
           </div>
         </div>

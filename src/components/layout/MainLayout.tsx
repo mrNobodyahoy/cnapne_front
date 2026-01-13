@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "./Sidebar";
 import { UserMenu } from "./UserMenu";
 import Modal from "../ui/Modal";
+import { Toaster } from "react-hot-toast";
 import { ProfileEditForm } from "../professional/ProfileEditForm";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="flex h-screen bg-gray-100">
+            <Toaster position="top-right" />
             <Sidebar />
 
             <div className="flex-1 flex flex-col overflow-hidden">
