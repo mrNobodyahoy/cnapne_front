@@ -18,6 +18,7 @@ import FollowUpProfilePage from "./pages/adm/followUp/FollowUpProfilePage";
 import EditFollowUpPage from "./pages/adm/followUp/EditFollowUpPage";
 import EditAtendimentoPage from "./pages/adm/servicesAtendimento/EditAtendimentoPage";
 import TeacherGuidanceListPage from "./pages/adm/teacherGuidance/TeacherGuidanceListPage";
+import AdminPage from "./pages/adm/AdminPage";
 
 // Páginas do Estudante
 import StudentHomePage from "./pages/student/StudentHomePage";
@@ -25,7 +26,6 @@ import StudentHomePage from "./pages/student/StudentHomePage";
 import ResetPassword from "./pages/common/ResetPassword";
 
 
-const AdminConfigPage = () => <h1 className="text-3xl font-bold">Página de Admin</h1>;
 
 const routes = [
   { path: "/login", element: <Login /> },
@@ -70,6 +70,7 @@ const routes = [
             path: "orientacoes",
             element: <TeacherGuidanceListPage />
           },
+          { path: "admin/config", element: <AdminPage /> },
           {
             path: "acompanhamentos",
             children: [
@@ -78,7 +79,6 @@ const routes = [
               { path: ":acompanhamentoId/edit", element: <EditFollowUpPage /> },
             ],
           },
-          { path: "admin/config", element: <AdminConfigPage /> },
         ],
       },
     ],

@@ -1,4 +1,3 @@
-// src/services/dashboardService.ts
 import api from "../lib/http";
 import type {
   DashboardData,
@@ -13,13 +12,13 @@ export async function getDashboardData(): Promise<DashboardData> {
 export async function getMonthlyEvolutionData(): Promise<MonthlyData[]> {
   const { data } = await api.get<MonthlyData[]>(
     "/dashboard/evolucao-mensal",
-    {}
+    {},
   );
   return data;
 }
 export async function getStudentStatusData(): Promise<StudentStatusData[]> {
   const { data } = await api.get<StudentStatusData[]>(
-    "/dashboard/student-status"
+    "/dashboard/student-status",
   );
   return data;
 }

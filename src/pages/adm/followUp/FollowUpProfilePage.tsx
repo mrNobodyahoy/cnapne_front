@@ -185,7 +185,7 @@ export default function AcompanhamentoProfilePage() {
                             <InfoField
                                 icon={User}
                                 label="Autor(a)"
-                                value={acompanhamento.teacherGuidance.author.fullName}
+                                value={acompanhamento.teacherGuidance.author?.fullName}
                             />
                             <InfoField
                                 icon={MapPin}

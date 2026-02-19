@@ -33,7 +33,7 @@ export default function AtendimentoForm({ studentId }: { studentId: string }) {
         resolver: zodResolver(createServiceSchema)
     });
 
-    const [formKey, setFormKey] = useState(Date.now());
+    const [_, setFormKey] = useState(Date.now());
     const { setSearchTerm, searchedProfessionals, isLoading: professionalSearchIsLoading } = useProfessionalSearch();
     const searchedOptions = searchedProfessionals?.map(prof => ({ value: prof.id, label: prof.fullName }));
 

@@ -1,5 +1,3 @@
-// src/components/student/StudentEditForm.tsx
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import FormContainer from '../ui/FormContainer';
 import { updateStudent } from '../../services/studentService';
 import type { UpdateStudentDTO, Student } from '../../types/student';
-
 import StudentFields from './StudentFields';
 
 const updateStudentSchema = z.object({
   email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
   completeName: z.string().min(1, 'Nome completo é obrigatório.'),
   registration: z.string()
-    .max(11, 'A matrícula deve ter exatamente 11 dígitos.')
+    .min(1, 'Matrícula é obrigatória')
+    .max(11, 'A matrícula deve ter no máximo 11 caracteres.')
     .regex(/^\d+$/, "A matrícula deve conter apenas números."),
   team: z.string().min(1, 'Turma é obrigatória.'),
   birthDate: z.string().refine((date) => !isNaN(new Date(date).getTime()), 'Data inválida.'),
@@ -26,6 +24,7 @@ const updateStudentSchema = z.object({
   }),
 });
 
+// Inferimos o tipo a partir do Schema do Zod
 export type UpdateFormData = z.infer<typeof updateStudentSchema>;
 
 export default function StudentEditForm({
@@ -70,14 +69,21 @@ export default function StudentEditForm({
     },
     onError: (err: any) => {
       console.error('Erro ao atualizar estudante:', err);
+      alert('Erro ao atualizar: ' + (err.message || "Erro desconhecido"));
     },
   });
 
   const onSubmit = (data: UpdateFormData) => {
-    const payload = {
+    // Tratamento de dados antes de enviar
+    const payload: UpdateStudentDTO = {
       ...data,
       phone: data.phone.replace(/[^0-9]/g, ''),
+      status: data.status as "ATIVO" | "INATIVO" // Casting explícito para garantir o tipo
     };
+
+    // Se o status no form for diferente dos permitidos na DTO, precisamos tratar,
+    // mas aqui o Zod já garante que é ATIVO ou INATIVO.
+
     updateMutation.mutate(payload);
   };
 
@@ -88,7 +94,12 @@ export default function StudentEditForm({
       onClose={onClose}
       isLoading={isSubmitting || updateMutation.isPending}
     >
-      <StudentFields register={register} control={control} errors={errors} variant="edit" />
+      <StudentFields
+        register={register}
+        control={control}
+        errors={errors}
+        variant="edit"
+      />
     </FormContainer>
   );
 }

@@ -14,10 +14,12 @@ import { useState, useEffect } from 'react';
 import Select from '../../ui/Select';
 import type { ReadService } from '../../../types/atendimento';
 import type { ReadFollowUp } from '../../../types/followUp';
+
 const localOptions = [
     { value: 'false', label: 'Sala de Aula' },
     { value: 'true', label: 'Domiciliar' },
 ];
+
 interface Props {
     onClose: () => void;
     serviceId?: string;
@@ -32,6 +34,7 @@ export default function TeacherGuidanceForm({
     existingGuidance,
 }: Props) {
     const queryClient = useQueryClient();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [apiError, setApiError] = useState<string | null>(null);
 
     const isEditMode = !!existingGuidance;
@@ -49,6 +52,7 @@ export default function TeacherGuidanceForm({
             domiciliar: existingGuidance?.domiciliar || false,
         },
     });
+
     useEffect(() => {
         if (existingGuidance) {
             reset({
@@ -71,11 +75,14 @@ export default function TeacherGuidanceForm({
             toast.success('Orientação Pedagógica criada com sucesso!');
             if (serviceId) queryClient.invalidateQueries({ queryKey: ['atendimento', serviceId] });
             if (followUpId) queryClient.invalidateQueries({ queryKey: ['acompanhamento', followUpId] });
+            // Invalida a lista geral também para atualizar a tabela principal
+            queryClient.invalidateQueries({ queryKey: ['teacherGuidances'] });
             onClose();
         },
         onError: (err: any) => {
             const message = err.response?.data?.message || 'Erro ao criar orientação.';
             setApiError(message);
+            toast.error(message);
         },
     });
 
@@ -85,6 +92,7 @@ export default function TeacherGuidanceForm({
         onSuccess: (updatedGuidanceData) => {
             toast.success('Orientação atualizada com sucesso!');
 
+            // Atualiza cache específico se estivermos vindo de uma página de detalhes
             if (serviceId) {
                 const queryKey = ['atendimento', serviceId];
                 queryClient.setQueryData<ReadService>(queryKey, (oldData) => {
@@ -101,20 +109,26 @@ export default function TeacherGuidanceForm({
                 });
             }
 
+            // Invalida a lista geral
+            queryClient.invalidateQueries({ queryKey: ['teacherGuidances'] });
+
             onClose();
         },
         onError: (err: any) => {
             const message = err.response?.data?.message || 'Erro ao atualizar orientação.';
             setApiError(message);
+            toast.error(message);
         },
 
     });
 
     const onSubmit = (formData: CreateTeacherGuidanceFormData) => {
         setApiError(null);
-        const domiciliarValue = formData.domiciliar;
 
-        if (isEditMode) {
+        // Garante boolean
+        const domiciliarValue = Boolean(formData.domiciliar);
+
+        if (isEditMode && existingGuidance) {
             const dataToSubmit: UpdateTeacherGuidance = {
                 guidanceDetails: formData.guidanceDetails,
                 recommendations: formData.recommendations,
@@ -126,12 +140,14 @@ export default function TeacherGuidanceForm({
                 guidanceDetails: formData.guidanceDetails,
                 recommendations: formData.recommendations,
                 domiciliar: domiciliarValue,
-                serviceId: serviceId || null,
-                followUpId: followUpId || null,
+                // Garante que null seja enviado se undefined
+                serviceId: serviceId ?? null,
+                followUpId: followUpId ?? null,
             };
             createMutation.mutate(dataToSubmit);
         }
     };
+
     return (
         <FormContainer
             title={isEditMode ? "Editar Orientação Pedagógica" : "Criar Orientação Pedagógica"}
@@ -139,7 +155,6 @@ export default function TeacherGuidanceForm({
             onClose={onClose}
             isLoading={createMutation.isPending || updateMutation.isPending}
         >
-
             <Controller
                 name="domiciliar"
                 control={control}
@@ -148,8 +163,10 @@ export default function TeacherGuidanceForm({
                         id="domiciliar"
                         label="Local da Orientação"
                         options={localOptions}
-                        value={String(field.value)}
-                        onChange={field.onChange}
+                        // Converte boolean para string para o select funcionar
+                        value={field.value ? 'true' : 'false'}
+                        // Converte string de volta para boolean ao mudar
+                        onChange={(e) => field.onChange(e.target.value === 'true')}
                         error={errors.domiciliar?.message}
                     />
                 )}
@@ -170,6 +187,12 @@ export default function TeacherGuidanceForm({
                 error={errors.recommendations?.message}
                 rows={6}
             />
+
+            {apiError && (
+                <div className="text-red-600 text-sm mt-2">
+                    {apiError}
+                </div>
+            )}
         </FormContainer>
     );
 }

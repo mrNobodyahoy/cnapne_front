@@ -1,6 +1,4 @@
-// src/pages/student/StudentProfileView.tsx
-
-import { formatPhone, formatGender } from '../../lib/formatters';
+import { formatPhone, formatGender } from '../../lib/constants';
 import type { Student } from '../../types/student';
 import {
   UserCircle, Mail, Phone, Calendar, Users, Hash, CheckCircle,

@@ -1,4 +1,3 @@
-// src/pages/atendimentos/AtendimentoProfilePage.tsx
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getAtendimentoById, deleteAtendimento } from '../../../services/atendimentoService';
@@ -91,7 +90,6 @@ export default function AtendimentoProfilePage() {
                 Voltar para a lista de atendimentos
             </Link>
 
-            {/* Cabeçalho */}
             <div className="bg-white p-6 rounded-xl border shadow-sm flex justify-between items-start">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">{atendimento.typeService}</h1>
@@ -138,7 +136,6 @@ export default function AtendimentoProfilePage() {
                 </Link>
 
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
-                    {/* ... (conteúdo card sessão) ... */}
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Detalhes da Sessão</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <InfoField icon={Calendar} label="Data" value={format(parseISO(atendimento.sessionDate), "dd/MM/yyyy", { locale: ptBR })} />
@@ -148,9 +145,7 @@ export default function AtendimentoProfilePage() {
                     </div>
                 </div>
 
-                {/* Registros do Atendimento */}
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
-                    {/* ... (conteúdo card registros) ... */}
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Registros do Atendimento</h2>
                     <div className="space-y-6">
                         <InfoField icon={FileText} label="Descrição" value={atendimento.descriptionService} />
@@ -175,7 +170,6 @@ export default function AtendimentoProfilePage() {
                             >
                                 <Edit className="h-4 w-4" />
                             </Button>
-                            {/* Botão PDF */}
                             <Button
                                 onClick={handlePdfDownload}
                                 variant="outline"
@@ -186,7 +180,6 @@ export default function AtendimentoProfilePage() {
                             </Button>
                         </div>
 
-                        {/* Conteúdo do Card */}
                         <div className="flex items-center border-b pb-3 mb-4">
                             <ClipboardPenLine className="h-6 w-6 text-ifpr-green mr-3" />
                             <h2 className="text-xl font-bold text-gray-800">Orientação Pedagógica Vinculada</h2>
@@ -195,7 +188,7 @@ export default function AtendimentoProfilePage() {
                             <InfoField
                                 icon={User}
                                 label="Autor(a)"
-                                value={atendimento.teacherGuidance.author.fullName}
+                                value={atendimento.teacherGuidance.author?.fullName || 'Não informado'}
                             />
                             <InfoField
                                 icon={MapPin}
@@ -211,7 +204,6 @@ export default function AtendimentoProfilePage() {
                     </div>
                 )}
 
-                {/* Profissionais Envolvidos */}
                 <div className="bg-white p-6 rounded-xl border shadow-sm">
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">Profissionais Envolvidos</h2>
                     <ul className="space-y-3">
@@ -228,18 +220,16 @@ export default function AtendimentoProfilePage() {
                 </div>
             </div>
 
-            {/* --- MODAIS --- */}
             {atendimento.teacherGuidance && (
                 <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
                     <TeacherGuidanceForm
                         existingGuidance={atendimento.teacherGuidance}
-                        followUpId={atendimentoId} // Para invalidar a query
+                        serviceId={atendimentoId}
                         onClose={() => setIsEditModalOpen(false)}
                     />
                 </Modal>
             )}
 
-            {/* Modal de CRIAÇÃO */}
             <Modal isOpen={isGuidanceModalOpen} onClose={() => setIsGuidanceModalOpen(false)}>
                 <TeacherGuidanceForm
                     serviceId={atendimentoId}

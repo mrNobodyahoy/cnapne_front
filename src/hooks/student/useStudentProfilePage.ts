@@ -1,4 +1,3 @@
-// src/hooks/useStudentProfilePage.ts
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -37,7 +36,7 @@ export function useStudentProfilePage() {
   const handleDelete = () => {
     if (
       window.confirm(
-        `Tem certeza que deseja deletar o estudante ${student?.completeName}?`
+        `Tem certeza que deseja deletar o estudante ${student?.completeName}?`,
       )
     ) {
       deleteMutation.mutate(studentId!);

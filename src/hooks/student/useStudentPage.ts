@@ -13,7 +13,7 @@ export function useStudentsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"ALL" | "ATIVO" | "INATIVO">(
-    "ALL"
+    "ALL",
   );
   const [page, setPage] = useState(0);
 

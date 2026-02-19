@@ -18,7 +18,7 @@ import StudentTimeline from '../../../components/student/StudentTimeline';
 import Button from '../../../components/ui/Button';
 import Modal from '../../../components/ui/Modal';
 import StudentEditForm from '../../../components/student/StudentEditForm';
-import { formatPhone, formatGender } from '../../../lib/formatters';
+import { formatPhone, formatGender } from '../../../lib/constants';
 
 type Tab = 'perfil' | 'documentos' | 'timeline';
 

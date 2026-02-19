@@ -29,7 +29,7 @@ export function useAtendimentosPage(filters: Filters) {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["atendimentos", queryParams, session?.role],
+    queryKey: ["atendimentos", page, studentName, status, session?.role],
     queryFn: () => getAtendimentosPaginated(queryParams),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60,

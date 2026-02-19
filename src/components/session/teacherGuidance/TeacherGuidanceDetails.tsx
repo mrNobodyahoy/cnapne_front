@@ -30,7 +30,7 @@ export default function TeacherGuidanceDetails({ guidance }: Props) {
                 <InfoField
                     icon={User}
                     label="Autor(a)"
-                    value={guidance.author.fullName}
+                    value={guidance.author?.fullName || 'N/A'}
                 />
                 <InfoField
                     icon={MapPin}
@@ -45,7 +45,7 @@ export default function TeacherGuidanceDetails({ guidance }: Props) {
                 <InfoField
                     icon={Award}
                     label="Especialidade do Autor"
-                    value={guidance.author.specialty}
+                    value={guidance.author?.specialty || 'N/A'}
                 />
             </div>
 

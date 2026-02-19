@@ -25,24 +25,20 @@ export default function GuidanceTableRow({
             className="hover:bg-gray-100 cursor-pointer"
             onClick={() => onShowDetails(guidance)}
         >
-            {/* Aluno */}
             <td className="px-6 py-4 font-medium text-gray-900 truncate max-w-xs">
                 {guidance.student.completeName}
             </td>
 
-            {/* Autor(a) */}
             <td className="px-6 py-4 text-gray-600 truncate max-w-xs">
-                {guidance.author.fullName}
+                {guidance.author?.fullName || 'N/A'}
             </td>
 
-            {/* Data */}
             <td className="px-6 py-4 text-gray-600">
                 {format(parseISO(guidance.createdAt), "dd/MM/yyyy", { locale: ptBR })}
             </td>
             <td className="px-6 py-4 text-gray-600">
                 {guidance.domiciliar ? 'Domiciliar' : 'Sala de Aula'}
             </td>
-            {/* Ações */}
             <td className="px-6 py-4">
                 <div className="flex items-center justify-center gap-2">
                     <Button

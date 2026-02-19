@@ -29,7 +29,8 @@ export function useFollowUpPage(filters: Filters) {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["acompanhamentos", queryParams, session?.role],
+    // Adicionei os filtros na key
+    queryKey: ["acompanhamentos", page, studentName, status, session?.role],
     queryFn: () => getAcompanhamentosPaginated(queryParams),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60,

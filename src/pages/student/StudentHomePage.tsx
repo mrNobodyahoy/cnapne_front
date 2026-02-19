@@ -1,5 +1,3 @@
-// src/pages/student/StudentHomePage.tsx
-
 import { useQuery } from '@tanstack/react-query';
 import { getStudentMe } from '../../services/studentService';
 import { LoaderCircle, AlertTriangle } from 'lucide-react';

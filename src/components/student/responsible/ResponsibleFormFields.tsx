@@ -1,21 +1,21 @@
 import { Controller, type Control, type FieldErrors, type UseFormRegister, type UseFieldArrayAppend, type UseFieldArrayRemove, type FieldArrayWithId } from 'react-hook-form';
 import { Trash, Plus } from 'lucide-react';
 
-import type { CreateFormData } from '../StudentForm';
+import type { CreateStudentDTO } from '../../../types/student';
 import Input from '../../ui/Input';
 import Button from '../../ui/Button';
-import { formatPhone } from '../../../lib/formatters';
+import { formatPhone } from '../../../lib/constants';
 
 type Props = {
-  control: Control<CreateFormData>;
-  register: UseFormRegister<CreateFormData>;
-  errors: FieldErrors<CreateFormData>;
-  fields: FieldArrayWithId<CreateFormData, "responsibles", "id">[];
-  append: UseFieldArrayAppend<CreateFormData, "responsibles">;
+  control: Control<CreateStudentDTO>;
+  register: UseFormRegister<CreateStudentDTO>;
+  errors: FieldErrors<CreateStudentDTO>;
+  fields: FieldArrayWithId<CreateStudentDTO, "responsibles", "id">[];
+  append: UseFieldArrayAppend<CreateStudentDTO, "responsibles">;
   remove: UseFieldArrayRemove;
 };
 
-export default function ResponsibleFormFields({ register, errors, fields, append, remove, control }: Props) { // <<< MUDANÇA AQUI: Adiciona 'control'
+export default function ResponsibleFormFields({ register, errors, fields, append, remove, control }: Props) {
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-bold text-ifpr-black">

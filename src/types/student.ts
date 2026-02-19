@@ -8,7 +8,7 @@ export interface Student {
   phone: string;
   gender: string;
   ethnicity: string;
-  status: string;
+  status: "ATIVO" | "INATIVO" | "ARQUIVADO";
   responsibles?: ResponsibleDTO[];
 }
 
@@ -34,7 +34,7 @@ export interface UpdateStudentDTO {
   phone: string;
   gender: string;
   ethnicity: string;
-  status: string;
+  status: "ATIVO" | "INATIVO" | "ARQUIVADO";
 }
 
 export interface ResponsibleDTO {
@@ -49,7 +49,7 @@ export interface StudentSummary {
   completeName: string;
   registration: string;
   team: string;
-  status: string;
+  status: "ATIVO" | "INATIVO" | "ARQUIVADO";
 }
 
 export interface Page<T> {
@@ -67,7 +67,7 @@ export interface GetStudentsParams {
   page?: number;
   size?: number;
   query?: string;
-  status?: "ALL" | "ATIVO" | "INATIVO";
+  status?: "ALL" | "ATIVO" | "INATIVO" | "ARQUIVADO";
 }
 
 export interface ServiceMonitoringItem {

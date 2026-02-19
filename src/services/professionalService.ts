@@ -1,5 +1,3 @@
-// src/services/professionalService.ts
-
 import api from "../lib/http";
 import type {
   ReadProfessionalDTO,
@@ -11,7 +9,7 @@ import type {
 } from "../types/professional";
 
 export async function getProfessionalsPaginated(
-  params: GetProfessionalsParams
+  params: GetProfessionalsParams,
 ): Promise<Page<ReadProfessionalDTO>> {
   const { data } = await api.get<Page<ReadProfessionalDTO>>("/professionals", {
     params,
@@ -20,22 +18,22 @@ export async function getProfessionalsPaginated(
 }
 
 export async function createProfessional(
-  payload: CreateProfessionalDTO
+  payload: CreateProfessionalDTO,
 ): Promise<ReadProfessionalDTO> {
   const { data } = await api.post<ReadProfessionalDTO>(
     "/professionals",
-    payload
+    payload,
   );
   return data;
 }
 
 export async function updateProfessional(
   id: string,
-  payload: UpdateProfessionalDTO
+  payload: UpdateProfessionalDTO,
 ): Promise<ReadProfessionalDTO> {
   const { data } = await api.put<ReadProfessionalDTO>(
     `/professionals/${id}`,
-    payload
+    payload,
   );
   return data;
 }

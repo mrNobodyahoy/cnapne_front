@@ -17,7 +17,7 @@ api.interceptors.response.use(
       location.href = "/login";
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 export const setToken = (token: string) => {

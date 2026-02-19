@@ -1,4 +1,3 @@
-// src/components/student/TimelineCard.tsx
 import type { TimelineItem } from '../../types/student';
 import { useNavigate } from 'react-router-dom';
 import {

@@ -1,4 +1,3 @@
-// src/components/student/StudentPageHeader.tsx
 import { Search, Plus } from 'lucide-react';
 import Button from '../ui/Button';
 

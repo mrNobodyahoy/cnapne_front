@@ -149,7 +149,6 @@ export default function TeacherGuidanceListPage() {
                 />
             )}
 
-            {/* Modais */}
             <Modal isOpen={isDetailsOpen} onClose={handleCloseModals}>
                 {selectedGuidance && (
                     <TeacherGuidanceDetails guidance={selectedGuidance} />

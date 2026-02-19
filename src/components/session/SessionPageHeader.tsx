@@ -1,8 +1,7 @@
 // src/components/session/SessionPageHeader.tsx
 
-import { Search, Plus } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Select, { type Option } from '../ui/Select';
-import { Link } from 'react-router-dom';
 
 
 interface SessionPageHeaderProps {
@@ -25,11 +24,9 @@ export default function SessionPageHeader({
     statusFilter,
     onStatusChange,
     statusOptions,
-    addItemPath,
-    addItemLabel,
+
 }: SessionPageHeaderProps) {
 
-    const showAddItemButton = addItemPath && addItemLabel;
 
     return (
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">

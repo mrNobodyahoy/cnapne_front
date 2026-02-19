@@ -1,4 +1,4 @@
-import type { StudentSummary } from "../types/student";
+import type { StudentSummary } from "./student";
 import type { ReadProfessionalDTO } from "./professional";
 
 export interface CreateTeacherGuidance {
@@ -18,7 +18,7 @@ export interface ReadTeacherGuidance {
   guidanceDetails: string;
   recommendations: string;
   domiciliar: boolean;
-  author: ReadProfessionalDTO;
+  author?: ReadProfessionalDTO;
 }
 
 export interface UpdateTeacherGuidance {

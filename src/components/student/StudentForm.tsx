@@ -1,132 +1,102 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useState } from 'react';
-
-import { useMinorLogic } from '../../hooks/util/useMinorLogic';
-import FormContainer from '../ui/FormContainer';
-
-import type { CreateStudentDTO } from '../../types/student';
-import { createStudent } from '../../services/studentService';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import StudentFields from './StudentFields';
-import ResponsibleFormFields from './responsible/ResponsibleFormFields';
-import { calculateAge } from '../../lib/utils';
+import ResponsibleFormFields from './responsible/ResponsibleFormFields'; // Importe o componente dos responsáveis
+import { useMinorLogic } from '../../hooks/util/useMinorLogic'; // Ajuste o caminho do seu hook
 
+import { createStudent } from "../../services/studentService";
+import type { CreateStudentDTO } from "../../types/student";
 
-const responsibleSchema = z.object({
-  completeName: z.string().min(1, 'Nome do responsável é obrigatório.'),
-  email: z.string().email('E-mail do responsável é inválido.'),
-  phone: z.string().min(1, 'Telefone do responsável é obrigatório.'),
-  kinship: z.string().min(1, 'Parentesco é obrigatório.'),
-});
+interface StudentFormProps {
+  onClose: () => void;
+}
 
-const createStudentSchema = z.object({
-  email: z.string().email('E-mail inválido.').min(1, 'E-mail é obrigatório.'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres.'),
-  completeName: z.string().min(1, 'Nome completo é obrigatório.'),
-  registration: z.string()
-    .max(11, 'A matrícula deve ter exatamente 11 dígitos.')
-    .regex(/^\d+$/, "A matrícula deve conter apenas números."),
-  team: z.string().min(1, 'Turma é obrigatória.'),
-  birthDate: z.string().min(1, 'Data de nascimento é obrigatória.').refine((date) => !isNaN(new Date(date).getTime()), 'Data inválida.'),
-  phone: z.string().min(1, 'Telefone é obrigatório.'),
-  gender: z.string().min(1, 'Gênero é obrigatório.'),
-  ethnicity: z.string().min(1, 'Etnia é obrigatória.'),
-  responsibles: z.array(responsibleSchema).optional(),
-}).refine(data => {
-  if (!data.birthDate) return true;
-  const age = calculateAge(data.birthDate);
-  if (age < 18) {
-    return data.responsibles && data.responsibles.length > 0;
-  }
-  return true;
-}, {
-  message: 'Para estudantes menores de 18 anos, é obrigatório cadastrar ao menos um responsável.',
-  path: ['responsibles'],
-});
-
-
-export type CreateFormData = z.infer<typeof createStudentSchema>;
-
-export default function StudentForm({ onClose }: { onClose: () => void }) {
+export default function StudentForm({ onClose }: StudentFormProps) {
   const queryClient = useQueryClient();
-  const [apiError, setApiError] = useState<string | null>(null);
 
+  // 1. Inicializa o react-hook-form adicionando o "watch"
   const {
     register,
     handleSubmit,
     control,
-    watch,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<CreateFormData>({
-    resolver: zodResolver(createStudentSchema),
-    mode: 'onBlur',
+    watch, // <-- Necessário para observar a data de nascimento
+    formState: { errors }
+  } = useForm<CreateStudentDTO>({
     defaultValues: {
-      responsibles: [],
+      responsibles: [] // Inicializa o array vazio
     }
   });
 
+  // 2. Configura o Field Array para gerenciar a lista de responsáveis
   const { fields, append, remove, replace } = useFieldArray({
     control,
-    name: "responsibles",
+    name: "responsibles" // Este nome deve bater com a sua interface CreateStudentDTO
   });
 
+  // 3. Chama a sua lógica de verificar idade
   const { isMinor } = useMinorLogic({
     watch,
-    fieldArray: { fields, append, replace },
+    fieldArray: { fields, append, replace }
   });
 
-  const createMutation = useMutation({
-    mutationFn: (newStudent: CreateStudentDTO) => createStudent(newStudent),
+  // Configura a requisição para a API
+  const mutation = useMutation({
+    mutationFn: createStudent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'] });
-      reset();
+      queryClient.invalidateQueries({ queryKey: ["students"] });
       onClose();
     },
     onError: (err: any) => {
-      setApiError(err.response?.data?.message || 'Ocorreu um erro. Tente novamente.');
-    },
+      alert("Erro ao criar estudante: " + err.message);
+    }
   });
 
-  const onSubmit = (data: CreateFormData) => {
-    setApiError(null);
-    const payload: CreateStudentDTO = { ...data };
-
-    if (!isMinor) {
-      delete (payload as any).responsibles;
-    }
-
-    createMutation.mutate(payload);
+  const onSubmit = (data: CreateStudentDTO) => {
+    mutation.mutate(data);
   };
 
   return (
-    <FormContainer
-      title="Criar Estudante"
-      onSubmit={handleSubmit(onSubmit)}
-      onClose={onClose}
-      isLoading={isSubmitting || createMutation.isPending}
-      apiError={apiError}
-    >
-      <StudentFields register={register} control={control} errors={errors} variant="create" />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4">
 
-      {isMinor && (
-        <div className="pt-6 border-t mt-6">
+      <StudentFields
+        register={register}
+        control={control}
+        errors={errors}
+        variant="create"
+      />
+
+      {/* 4. Renderiza os responsáveis se for menor de idade ou se já houver algum na lista */}
+      {(isMinor || fields.length > 0) && (
+        <div className="pt-6 mt-6 border-t border-gray-200">
           <ResponsibleFormFields
             control={control}
             register={register}
             errors={errors}
             fields={fields}
-            append={append}
+            append={append as any}
             remove={remove}
           />
-          {errors.responsibles && (
-            <p className="text-sm text-red-600 mt-2">{errors.responsibles.message}</p>
-          )}
         </div>
       )}
-    </FormContainer>
+
+      {/* Botões do Formulário */}
+      <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 disabled:opacity-50 focus:outline-none"
+        >
+          {mutation.isPending ? "Salvando..." : "Salvar Estudante"}
+        </button>
+      </div>
+    </form>
   );
 }
