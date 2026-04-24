@@ -1,70 +1,147 @@
-# React + TypeScript + Vite
+# 🎨 CNAPNE - Sistema de Gestão de Estudantes (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web do sistema **CNAPNE**, desenvolvida para consumo da API backend e voltada à gestão e acompanhamento de estudantes com necessidades específicas.
 
-Currently, two official plugins are available:
+Este frontend foi projetado com foco em **usabilidade, organização de dados sensíveis e controle de acesso por perfil**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🎯 Objetivo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Fornecer uma interface intuitiva para:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* 👥 Equipe multidisciplinar acompanhar estudantes
+* 📄 Gerenciar laudos e documentos
+* 🔐 Garantir acesso seguro baseado em permissões
+* 📊 Visualizar informações organizadas do prontuário
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Tecnologias Utilizadas
+
+* **React**
+* **TypeScript**
+* **Vite**
+* **React Router**
+* **Axios** (consumo da API)
+* **Context API / Hooks**
+* **ESLint + boas práticas de código**
+
+---
+
+## 🧱 Arquitetura do Frontend
+
+O projeto segue uma organização escalável:
+
+* **Separação por responsabilidade**
+
+  * `pages` → telas principais
+  * `components` → componentes reutilizáveis
+  * `services` → comunicação com API
+  * `contexts` → gerenciamento de estado global (auth, etc.)
+
+* **Tipagem forte com TypeScript**
+
+* **Gerenciamento de autenticação via JWT**
+
+* **Proteção de rotas baseada em perfil (RBAC)**
+
+---
+
+## 🔐 Autenticação e Controle de Acesso
+
+* Login integrado com o backend
+* Armazenamento de token JWT
+* Proteção de rotas privadas
+* Renderização condicional baseada em perfil:
+
+Perfis suportados:
+
+* `COORDENACAO_CNAPNE`
+* `EQUIPE_AEE`
+* `EQUIPE_ACOMPANHAMENTO`
+* `ESTUDANTE`
+
+---
+
+## ⚙️ Funcionalidades
+
+### 🔑 Autenticação
+
+* Tela de login integrada com API
+* Controle de sessão com JWT
+
+### 🎓 Gestão de Estudantes
+
+* Listagem de alunos
+* Visualização de prontuário
+* Exibição de dados estruturados
+
+### 📄 Documentos
+
+* Upload de arquivos
+* Listagem de documentos
+* Visualização/download
+
+### 👨‍💼 Profissionais
+
+* Listagem da equipe
+* Visualização de dados
+
+---
+
+## 🔌 Integração com Backend
+
+Este frontend consome a API do projeto:
+
+👉 Backend: [https://github.com/paulorvidal/cnapne](https://github.com/paulorvidal/cnapne)
+
+* Comunicação via **REST API**
+* Tratamento de erros (401, 403, etc.)
+* Interceptação de requisições (Axios)
+
+---
+
+## ⚡ Execução
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Aplicação disponível em:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+👉 [http://localhost:3000](http://localhost:3000)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# cnapne_front
+---
+
+## 📂 Diferenciais
+
+✔️ Integração completa com backend real
+✔️ Controle de acesso por perfil (não é só UI)
+✔️ Organização de código escalável
+✔️ Uso de TypeScript (forte para mercado)
+✔️ Separação clara de responsabilidades
+
+---
+
+## 🧠 O que este projeto demonstra
+
+* Construção de interfaces modernas com React
+* Consumo de APIs REST reais
+* Gerenciamento de autenticação no frontend
+* Organização de código para aplicações escaláveis
+* Uso de boas práticas com TypeScript
+
+---
+
+## 🚧 Melhorias planejadas
+
+* [ ] Implementar gerenciamento de estado com Zustand ou Redux
+* [ ] Melhorar UX/UI (feedback visual, loading states)
+* [ ] Testes (React Testing Library)
+* [ ] Deploy (Vercel / Netlify)
+* [ ] Responsividade completa
+
+---
+
